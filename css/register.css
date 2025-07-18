@@ -1,0 +1,167 @@
+/* /css/register.css */
+:root {
+    --primary-color: #4f46e5;
+    --secondary-color: #06b6d4;
+    --accent-color: #f59e0b;
+    --success-color: #10b981;
+    --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%, #f093fb 100%);
+}
+
+body {
+    background: var(--background-gradient);
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.register-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.register-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 450px;
+    width: 100%;
+    padding: 40px;
+}
+
+.brand-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.brand-logo i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.brand-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.brand-subtitle {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.form-floating {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background: #4338ca;
+    transform: translateY(-2px);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #6b7280;
+}
+
+.login-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+.input-group-text {
+    background: transparent;
+    border: 2px solid #e5e7eb;
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+}
+
+.input-group .form-control {
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+}
+
+.input-group:focus-within .input-group-text {
+    border-color: var(--primary-color);
+}
+
+.password-strength {
+    height: 5px;
+    border-radius: 3px;
+    margin-top: 5px;
+    transition: all 0.3s ease;
+}
+
+.strength-weak { 
+    background-color: #ef4444; 
+}
+
+.strength-medium { 
+    background-color: #f59e0b; 
+}
+
+.strength-strong { 
+    background-color: #10b981; 
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.password-match {
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+.match-success { 
+    color: var(--success-color); 
+}
+
+.match-error { 
+    color: #ef4444; 
+}

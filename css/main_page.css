@@ -1,0 +1,218 @@
+/* /css/dashboard.css */
+:root {
+    --primary-color: #4f46e5;
+    --secondary-color: #06b6d4;
+    --accent-color: #f59e0b;
+    --success-color: #10b981;
+    --exercise-color: #ef4444;
+    --journal-color: #8b5cf6;
+    --transaction-color: #10b981;
+    --habit-color: #f59e0b;
+    --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+}
+
+body {
+    background: var(--background-gradient);
+    background-attachment: fixed;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.main-content {
+    padding: 30px 0;
+}
+
+.welcome-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.welcome-subtitle {
+    color: #6b7280;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+.module-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.module-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.exercise-card .module-icon { 
+    color: var(--exercise-color); 
+}
+
+.journal-card .module-icon { 
+    color: var(--journal-color); 
+}
+
+.transaction-card .module-icon { 
+    color: var(--transaction-color); 
+}
+
+.habit-card .module-icon { 
+    color: var(--habit-color); 
+}
+
+.module-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #1f2937;
+}
+
+.module-description {
+    color: #6b7280;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.module-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    color: white;
+}
+
+.exercise-btn { 
+    background: var(--exercise-color); 
+}
+
+.journal-btn { 
+    background: var(--journal-color); 
+}
+
+.transaction-btn { 
+    background: var(--transaction-color); 
+}
+
+.habit-btn { 
+    background: var(--habit-color); 
+}
+
+.module-btn:hover {
+    transform: translateY(-2px);
+    color: white;
+    opacity: 0.9;
+}
+
+.stats-row {
+    margin-top: 40px;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    color: #6b7280;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.quick-actions {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    margin-top: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.quick-actions h3 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.quick-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.quick-btn:hover {
+    background: #4338ca;
+    transform: translateY(-2px);
+    color: white;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .module-card {
+        padding: 20px;
+    }
+    
+    .module-icon {
+        font-size: 2.5rem;
+    }
+}
