@@ -1,6 +1,12 @@
 <?php
 // You can add PHP logic here if needed
 session_start();
+// if (!isset($_SESSION['uid'])) {
+//     // Not logged in
+//     header('Location: login.php');
+//     exit;
+// }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +21,7 @@ session_start();
     <link href="navigation/navbar.css" rel="stylesheet">
     
     <!-- Main Dashboard CSS -->
-    <link href="css/main_page.css" rel="stylesheet">
+    <link href="css/dashboard.css" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation Bar -->

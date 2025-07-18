@@ -27,18 +27,30 @@ loginForm.addEventListener('submit', (e) => {
     document.getElementById('loadingSpinner').style.display = 'flex';
 
     signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Successfully logged in
-            const user = userCredential.user;
+    .then(async (userCredential) => {
+        const user = userCredential.user;
 
-            // Optional: Delay to let spinner show briefly
-            setTimeout(() => {
-                window.location.href = 'dashboard.php'; // Your redirect page
-            }, 2000); // Spinner visible for 1 second
-        })
-        .catch((error) => {
-            document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-            alert('Login failed: ' + error.message);
+        // Get ID token
+        const idToken = await user.getIdToken();
+
+        // Send token to PHP backend to create session
+        const response = await fetch("session-login.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ idToken: idToken })
         });
+
+        if (response.ok) {
+            window.location.href = "dashboard.php";
+        } else {
+            throw new Error("Server session creation failed");
+        }
+    })
+    .catch((error) => {
+        document.getElementById('loadingSpinner').style.display = 'none';
+        alert('Login failed: ' + error.message);
+    });
 });
 

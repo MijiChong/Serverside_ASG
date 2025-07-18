@@ -64,7 +64,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="js/firebase_register.js" defer> </script>
+    <script type="module" src="js/register.js" defer> </script>
     <script>
         // password strength checker
         document.getElementById('password').addEventListener('input', function() {

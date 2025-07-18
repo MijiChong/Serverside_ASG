@@ -55,6 +55,5 @@
     
 </body>
 </html>
-<?php
-// You can add PHP logic here if needed
-?>
+<!-- <?php
+?> -->
