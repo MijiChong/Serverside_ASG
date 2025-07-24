@@ -224,7 +224,7 @@
                             <i class="fas fa-cog"></i>Settings
                         </a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="login.php">
+                        <li><a class="dropdown-item" href="logout.php">
                             <i class="fas fa-sign-out-alt"></i>Logout
                         </a></li>
                     </ul>
