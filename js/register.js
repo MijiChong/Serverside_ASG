@@ -30,11 +30,6 @@ registerForm.addEventListener("submit", async function(event) {
     const username = document.getElementById('username').value; // make sure this input exists!
 
     try {
-        if (!email.includes('@') || password.length < 6 || username.trim() === '') {
-            alert('Please enter a valid email, password, and username');
-            return;
-         }
-
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
