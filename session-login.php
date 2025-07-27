@@ -1,33 +1,33 @@
 <?php
-require 'credential/vendor/autoload.php'; // Firebase PHP SDK autoload
+require 'credential/vendor/autoload.php';
 
 use Kreait\Firebase\Factory;
-use Kreait\Firebase\Auth;
 
-// Initialize Firebase Admin SDK
-$factory = (new Factory)->withServiceAccount('credential/firebase_credentials.json'); // Replace with your service account key file
+$factory = (new Factory)->withServiceAccount('credential/firebase_credentials.json');
 $auth = $factory->createAuth();
 
-// Accept raw POST input
 $data = json_decode(file_get_contents("php://input"), true);
 $idToken = $data['idToken'] ?? null;
 
+session_start();
+
 if (!$idToken) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Missing ID token']);
+    echo json_encode(['error' => 'Missing ID token', 'received' => $data]);
     exit;
 }
 
 try {
     $verifiedIdToken = $auth->verifyIdToken($idToken);
-    $uid = $verifiedIdToken->claims()->get('sub');
+    $uid = $verifiedIdToken->claims()->get('sub'); // Firebase UID
 
-    // Start PHP session
-    session_start();
     $_SESSION['uid'] = $uid;
 
-    echo json_encode(['success' => true]);
+    echo json_encode([
+        'success' => true,
+        'uid' => $uid,
+        'session_id' => session_id(),
+        'session_uid' => $_SESSION['uid']
+    ]);
 } catch (Exception $e) {
-    http_response_code(401);
-    echo json_encode(['error' => 'Invalid ID token']);
+    echo json_encode(['error' => $e->getMessage()]);
 }

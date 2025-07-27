@@ -127,7 +127,7 @@
         // Form validation
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            const confirmPassword = document.getElementById('confirm_pass').value;
             
             // Check password requirements
             if (password.length < 8) {

@@ -1,10 +1,12 @@
 <?php
 // profile.php
 session_start();
-// if (!isset($_SESSION['uid'])) {
-//     header("Location: login.php");
-//     exit();
-// }
+// var_dump($_SESSION);
+if (!isset($_SESSION['uid'])) {
+    header("Location: login.php");
+    exit();
+}
+$uid = $_SESSION['uid']; // Pass UID to JS
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,168 +16,85 @@ session_start();
     <title>MyTrackDiary - Profile</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Navigation CSS -->
-    <link href="navigation/navbar.css" rel="stylesheet">
-    
-    <!-- Profile CSS -->
+    <link href="SS_ASS/navigation/navbar.css" rel="stylesheet">
     <link href="css/profile.css" rel="stylesheet">
-    
-    <!-- Firebase JS SDKs -->
-    <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyBq_7VkBVj7zTJJWTltVcOk6KIU4Z6kVfE",
-        authDomain: "serverside-39d3b.firebaseapp.com",
-        projectId: "serverside-39d3b",
-        storageBucket: "serverside-39d3b.appspot.com",
-        messagingSenderId: "258572801740",
-        appId: "1:258572801740:web:e96cfc7baefe9b11da1469",
-        measurementId: "G-5NDQKLEGST"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            window.location.href = 'login.php';
-        } else {
-            console.log("User is authenticated:", user.email);
-            document.getElementById("userEmail").value = user.email;
-            document.getElementById("userName").value = user.displayName || "(no username)";
-        }
-    });
+    <!-- Pass UID to JS -->
+    <script>
+        const FIREBASE_UID = "<?= htmlspecialchars($uid); ?>";
     </script>
 </head>
 <body>
-    <!-- Navigation Bar -->
     <?php include 'navigation/navbar.php'; ?>
 
-    <!-- Main Content -->
     <div class="main-content">
         <div class="container">
-            <!-- Profile Header -->
             <div class="profile-header animate-fade-in">
                 <div class="row align-items-center">
                     <div class="col-md-3 text-center">
                         <div class="profile-avatar-container">
-                            <div id="avatarPreview" class="profile-avatar gradient-group-<?= rand(1, 5) ?>" onclick="openAvatarModal()">
+                            <div id="avatarPreview" class="profile-avatar gradient-group-1" onclick="openAvatarModal()">
                                 <span class="avatar-text">U</span>
-                                <div class="avatar-overlay">
-                                    <i class="fas fa-camera"></i>
-                                </div>
+                                <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-9">
-                        <h1 class="profile-title">
-                            <i class="fas fa-user-circle me-2"></i>
-                            My Profile
-                        </h1>
-                        <p class="profile-subtitle">
-                            Manage your account information and preferences. Keep your profile up to date to get the most out of MyTrackDiary.
-                        </p>
+                        <h1 class="profile-title"><i class="fas fa-user-circle me-2"></i>My Profile</h1>
+                        <p class="profile-subtitle">Manage your account information and preferences.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Profile Form -->
             <div class="row">
                 <div class="col-lg-8 mx-auto">
                     <div class="profile-card animate-fade-in">
                         <form id="profileForm" enctype="multipart/form-data">
-                            <!-- Account Information Section -->
                             <div class="form-section">
-                                <h3 class="section-title">
-                                    <i class="fas fa-id-card me-2"></i>
-                                    Account Information
-                                </h3>
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="username" disabled>
-                                            <label for="username">
-                                                <i class="fas fa-user me-1"></i>Username
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" id="email" disabled>
-                                            <label for="email">
-                                                <i class="fas fa-envelope me-1"></i>Email
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                <h3 class="section-title"><i class="fas fa-address-card me-2"></i>Personal Information</h3>
 
-                            <!-- Personal Information Section -->
-                            <div class="form-section">
-                                <h3 class="section-title">
-                                    <i class="fas fa-address-card me-2"></i>
-                                    Personal Information
-                                </h3>
-                                
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="firstName" placeholder="First Name">
-                                            <label for="firstName">
-                                                <i class="fas fa-user me-1"></i>First Name
-                                            </label>
+                                            <label for="firstName"><i class="fas fa-user me-1"></i>First Name</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="lastName" placeholder="Last Name">
-                                            <label for="lastName">
-                                                <i class="fas fa-user me-1"></i>Last Name
-                                            </label>
+                                            <label for="lastName"><i class="fas fa-user me-1"></i>Last Name</label>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
                                             <input type="date" class="form-control" id="dob">
-                                            <label for="dob">
-                                                <i class="fas fa-calendar me-1"></i>Date of Birth
-                                            </label>
+                                            <label for="dob"><i class="fas fa-calendar me-1"></i>Date of Birth</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
                                             <input type="tel" class="form-control" id="phone" placeholder="Phone Number">
-                                            <label for="phone">
-                                                <i class="fas fa-phone me-1"></i>Phone Number
-                                            </label>
+                                            <label for="phone"><i class="fas fa-phone me-1"></i>Phone Number</label>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-floating mb-3">
                                     <textarea class="form-control" id="address" placeholder="Address" style="height: 100px"></textarea>
-                                    <label for="address">
-                                        <i class="fas fa-map-marker-alt me-1"></i>Address
-                                    </label>
+                                    <label for="address"><i class="fas fa-map-marker-alt me-1"></i>Address</label>
                                 </div>
                             </div>
 
-                            <!-- Form Actions -->
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-save me-2"></i>
-                                    Save Changes
+                                    <i class="fas fa-save me-2"></i>Save Changes
                                 </button>
                                 <button type="button" class="btn btn-outline-secondary btn-lg" onclick="resetForm()">
-                                    <i class="fas fa-undo me-2"></i>
-                                    Reset
+                                    <i class="fas fa-undo me-2"></i>Reset
                                 </button>
                             </div>
                         </form>
@@ -185,24 +104,17 @@ session_start();
         </div>
     </div>
 
-    <!-- Avatar Selection Modal -->
+    <!-- Avatar Modal -->
     <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="avatarModalLabel">
-                        <i class="fas fa-image me-2"></i>
-                        Choose Profile Picture
-                    </h5>
+                    <h5 class="modal-title" id="avatarModalLabel"><i class="fas fa-image me-2"></i>Choose Profile Picture</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Upload Photo Section -->
                     <div class="upload-section">
-                        <h6 class="mb-3">
-                            <i class="fas fa-upload me-2"></i>
-                            Upload Your Photo
-                        </h6>
+                        <h6 class="mb-3"><i class="fas fa-upload me-2"></i>Upload Your Photo</h6>
                         <div class="upload-area" onclick="document.getElementById('avatarUpload').click()">
                             <i class="fas fa-cloud-upload-alt upload-icon"></i>
                             <p class="upload-text">Click to upload or drag and drop</p>
@@ -210,25 +122,13 @@ session_start();
                         </div>
                         <input type="file" class="d-none" id="avatarUpload" accept="image/*">
                     </div>
-                    
-                    <div class="divider">
-                        <span>OR</span>
-                    </div>
-                    
-                    <!-- Gradient Selection -->
+                    <div class="divider"><span>OR</span></div>
                     <div class="gradient-section">
-                        <h6 class="mb-3">
-                            <i class="fas fa-palette me-2"></i>
-                            Choose Gradient
-                        </h6>
+                        <h6 class="mb-3"><i class="fas fa-palette me-2"></i>Choose Gradient</h6>
                         <div class="gradient-options">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
-                                <div class="gradient-option gradient-group-<?= $i ?>" 
-                                     onclick="selectGradient(<?= $i ?>)" 
-                                     data-gradient="<?= $i ?>">
-                                    <div class="gradient-check">
-                                        <i class="fas fa-check"></i>
-                                    </div>
+                                <div class="gradient-option gradient-group-<?= $i ?>" onclick="selectGradient(<?= $i ?>)" data-gradient="<?= $i ?>">
+                                    <div class="gradient-check"><i class="fas fa-check"></i></div>
                                 </div>
                             <?php endfor; ?>
                         </div>
@@ -242,10 +142,9 @@ session_start();
         </div>
     </div>
 
-    <!-- Firebase integration -->
-    <script type="module" src="profile.js"></script>
-    <script src="avatar.js"> </script>
-
+    <!-- JS -->
+    <script src="js/profile.js"></script>
+    <script src="js/avatar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
