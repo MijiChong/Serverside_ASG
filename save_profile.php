@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-Type: application/json');
 require 'mysql.php';
 
 if (!isset($_SESSION['uid'])) {
@@ -9,22 +10,19 @@ if (!isset($_SESSION['uid'])) {
 
 $uid = $_SESSION['uid'];
 
-// Decode JSON input
 $data = json_decode(file_get_contents("php://input"), true);
 $firstName = $data['firstName'] ?? '';
 $lastName  = $data['lastName'] ?? '';
-$dob       = !empty($data['dob']) ? $data['dob'] : null; // Convert '' to null
+$dob       = !empty($data['dob']) ? $data['dob'] : null;
 $phone     = $data['phone'] ?? '';
 $address   = $data['address'] ?? '';
 $avatar    = $data['avatarGradient'] ?? 1;
 
 try {
-    // Check if user exists
     $stmt = $pdo->prepare("SELECT id FROM personal_profile WHERE firebase_uid = :uid");
     $stmt->execute([':uid' => $uid]);
 
-    if ($stmt->rowCount() > 0) {
-        // UPDATE
+    if ($stmt->fetch()) {
         $update = $pdo->prepare("
             UPDATE personal_profile
             SET first_name = :firstName,
@@ -45,7 +43,6 @@ try {
             ':uid'       => $uid
         ]);
     } else {
-        // INSERT
         $insert = $pdo->prepare("
             INSERT INTO personal_profile 
             (firebase_uid, first_name, last_name, dob, phone, address, avatar_gradient)
@@ -63,6 +60,8 @@ try {
     }
 
     echo json_encode(['status' => 'success', 'message' => 'Profile saved successfully']);
+    exit;
 } catch (Exception $e) {
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    exit;
 }

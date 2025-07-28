@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-Type: application/json');
 require 'mysql.php';
 
 $firebase_uid = $_SESSION['uid'] ?? null;

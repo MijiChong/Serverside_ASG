@@ -1,7 +1,15 @@
-// Get Firebase UID from hidden input
-const uid = document.getElementById("firebaseUid").value;
+const uid = typeof FIREBASE_UID !== 'undefined' ? FIREBASE_UID : null;
+if (!uid) console.error("FIREBASE_UID is missing!");
 
-// Load profile data from server (via PHP)
+function showNotification(message, type = "info") {
+    alert(`[${type.toUpperCase()}] ${message}`); // Replace this with custom toast later if needed
+}
+
+function getSelectedGradient() {
+    const selected = document.querySelector(".gradient-option.selected");
+    return selected ? selected.dataset.gradient : 1;
+}
+
 async function loadUserData() {
     try {
         const response = await fetch("load_profile.php");
@@ -14,13 +22,20 @@ async function loadUserData() {
             document.getElementById("phone").value     = data.phone      || "";
             document.getElementById("address").value   = data.address    || "";
 
-            // Optional: set avatar gradient preview if needed
             if (data.avatar_gradient) {
                 const avatar = document.getElementById("avatarPreview");
                 avatar.className = `profile-avatar gradient-group-${data.avatar_gradient}`;
+
+                // Also visually select the corresponding gradient
+                document.querySelectorAll(".gradient-option").forEach(el => {
+                    el.classList.remove("selected");
+                    if (parseInt(el.dataset.gradient) === data.avatar_gradient) {
+                        el.classList.add("selected");
+                    }
+                });
             }
         } else {
-            showNotification(data.error, "danger");
+            console.warn("No existing profile:", data.error);
         }
     } catch (error) {
         console.error("Error loading profile:", error);
@@ -30,7 +45,6 @@ async function loadUserData() {
 
 loadUserData();
 
-// Save profile data on form submit
 document.getElementById("profileForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -41,7 +55,7 @@ document.getElementById("profileForm").addEventListener("submit", async (e) => {
         dob:       document.getElementById("dob").value,
         phone:     document.getElementById("phone").value.trim(),
         address:   document.getElementById("address").value.trim(),
-        avatarGradient: getSelectedGradient() // optional helper
+        avatarGradient: getSelectedGradient()
     };
 
     const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -57,10 +71,10 @@ document.getElementById("profileForm").addEventListener("submit", async (e) => {
         });
         const result = await response.json();
 
-        if (result.success) {
+        if (result.status === 'success') {
             showNotification("Profile updated successfully!", "success");
         } else {
-            showNotification(result.error || "Failed to save profile", "danger");
+            showNotification(result.message || "Failed to save profile", "danger");
         }
     } catch (err) {
         console.error("Save error:", err);
@@ -70,27 +84,3 @@ document.getElementById("profileForm").addEventListener("submit", async (e) => {
         submitBtn.disabled = false;
     }
 });
-
-// Helper: Notification alert
-function showNotification(message, type = "info") {
-    const notification = document.createElement("div");
-    notification.className = `alert alert-${type} alert-dismissible fade show notification`;
-    notification.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
-    document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 3000);
-}
-
-// Helper: Reset form
-function resetForm() {
-    document.getElementById("profileForm").reset();
-}
-window.resetForm = resetForm;
-
-// Optional: get selected avatar gradient (based on your UI)
-function getSelectedGradient() {
-    const selected = document.querySelector(".gradient-option.selected");
-    return selected ? parseInt(selected.dataset.gradient) : 1;
-}

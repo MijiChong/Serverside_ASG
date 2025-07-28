@@ -1,7 +1,6 @@
 <?php
 // profile.php
 session_start();
-// var_dump($_SESSION);
 if (!isset($_SESSION['uid'])) {
     header("Location: login.php");
     exit();
@@ -16,7 +15,7 @@ $uid = $_SESSION['uid']; // Pass UID to JS
     <title>MyTrackDiary - Profile</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="SS_ASS/navigation/navbar.css" rel="stylesheet">
+    <link href="navigation/navbar.css" rel="stylesheet">
     <link href="css/profile.css" rel="stylesheet">
 
     <!-- Pass UID to JS -->
@@ -25,126 +24,118 @@ $uid = $_SESSION['uid']; // Pass UID to JS
     </script>
 </head>
 <body>
-    <?php include 'navigation/navbar.php'; ?>
+<?php include 'navigation/navbar.php'; ?>
 
-    <div class="main-content">
-        <div class="container">
-            <div class="profile-header animate-fade-in">
-                <div class="row align-items-center">
-                    <div class="col-md-3 text-center">
-                        <div class="profile-avatar-container">
-                            <div id="avatarPreview" class="profile-avatar gradient-group-1" onclick="openAvatarModal()">
-                                <span class="avatar-text">U</span>
-                                <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
-                            </div>
+<div class="main-content">
+    <div class="container">
+        <div class="profile-header animate-fade-in">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center">
+                    <div class="profile-avatar-container">
+                        <div id="avatarPreview" class="profile-avatar gradient-group-1" onclick="openAvatarModal()">
+                            <span class="avatar-text">U</span>
+                            <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
                         </div>
-                    </div>
-                    <div class="col-md-9">
-                        <h1 class="profile-title"><i class="fas fa-user-circle me-2"></i>My Profile</h1>
-                        <p class="profile-subtitle">Manage your account information and preferences.</p>
+                        <!-- Hidden input to store gradient selection -->
+                        <input type="hidden" name="gradient" id="selectedGradient" value="1">
                     </div>
                 </div>
+                <div class="col-md-9">
+                    <h1 class="profile-title"><i class="fas fa-user-circle me-2"></i>My Profile</h1>
+                    <p class="profile-subtitle">Manage your account information and preferences.</p>
+                </div>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="profile-card animate-fade-in">
-                        <form id="profileForm" enctype="multipart/form-data">
-                            <div class="form-section">
-                                <h3 class="section-title"><i class="fas fa-address-card me-2"></i>Personal Information</h3>
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="profile-card animate-fade-in">
+                    <form id="profileForm" enctype="multipart/form-data">
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-address-card me-2"></i>Personal Information</h3>
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="firstName" placeholder="First Name">
-                                            <label for="firstName"><i class="fas fa-user me-1"></i>First Name</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="lastName" placeholder="Last Name">
-                                            <label for="lastName"><i class="fas fa-user me-1"></i>Last Name</label>
-                                        </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                                        <label for="firstName"><i class="fas fa-user me-1"></i>First Name</label>
                                     </div>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" id="dob">
-                                            <label for="dob"><i class="fas fa-calendar me-1"></i>Date of Birth</label>
-                                        </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                                        <label for="lastName"><i class="fas fa-user me-1"></i>Last Name</label>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="tel" class="form-control" id="phone" placeholder="Phone Number">
-                                            <label for="phone"><i class="fas fa-phone me-1"></i>Phone Number</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-floating mb-3">
-                                    <textarea class="form-control" id="address" placeholder="Address" style="height: 100px"></textarea>
-                                    <label for="address"><i class="fas fa-map-marker-alt me-1"></i>Address</label>
                                 </div>
                             </div>
 
-                            <div class="form-actions">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-save me-2"></i>Save Changes
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary btn-lg" onclick="resetForm()">
-                                    <i class="fas fa-undo me-2"></i>Reset
-                                </button>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" id="dob">
+                                        <label for="dob"><i class="fas fa-calendar me-1"></i>Date of Birth</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="tel" class="form-control" id="phone" placeholder="Phone Number">
+                                        <label for="phone"><i class="fas fa-phone me-1"></i>Phone Number</label>
+                                    </div>
+                                </div>
                             </div>
-                        </form>
-                    </div>
+
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" id="address" placeholder="Address" style="height: 100px"></textarea>
+                                <label for="address"><i class="fas fa-map-marker-alt me-1"></i>Address</label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-lg" onclick="resetForm()">
+                                <i class="fas fa-undo me-2"></i>Reset
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Avatar Modal -->
-    <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="avatarModalLabel"><i class="fas fa-image me-2"></i>Choose Profile Picture</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Avatar Modal -->
+<div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="avatarModalLabel">Choose Avatar Gradient</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="gradient-selection d-flex flex-wrap justify-content-center gap-2">
+                    <?php for ($i = 1; $i <= 6; $i++): ?>
+                        <div class="gradient-option gradient-group-<?= $i ?>" data-gradient="<?= $i ?>" onclick="selectGradient(<?= $i ?>)"></div>
+                    <?php endfor; ?>
                 </div>
-                <div class="modal-body">
-                    <div class="upload-section">
-                        <h6 class="mb-3"><i class="fas fa-upload me-2"></i>Upload Your Photo</h6>
-                        <div class="upload-area" onclick="document.getElementById('avatarUpload').click()">
-                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                            <p class="upload-text">Click to upload or drag and drop</p>
-                            <p class="upload-hint">PNG, JPG, GIF up to 5MB</p>
-                        </div>
-                        <input type="file" class="d-none" id="avatarUpload" accept="image/*">
-                    </div>
-                    <div class="divider"><span>OR</span></div>
-                    <div class="gradient-section">
-                        <h6 class="mb-3"><i class="fas fa-palette me-2"></i>Choose Gradient</h6>
-                        <div class="gradient-options">
-                            <?php for ($i = 1; $i <= 5; $i++): ?>
-                                <div class="gradient-option gradient-group-<?= $i ?>" onclick="selectGradient(<?= $i ?>)" data-gradient="<?= $i ?>">
-                                    <div class="gradient-check"><i class="fas fa-check"></i></div>
-                                </div>
-                            <?php endfor; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="applyAvatarSelection()">Apply Changes</button>
-                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="applyAvatarSelection()">Apply</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- JS -->
-    <script src="js/profile.js"></script>
-    <script src="js/avatar.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<!-- JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="js/profile.js"></script>
+<script src="js/avatar.js"></script>
+
+<?php echo "<script>console.log('UID from PHP:', '".htmlspecialchars($uid)."');</script>"; ?>
 </body>
 </html>
