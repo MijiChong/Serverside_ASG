@@ -1,0 +1,466 @@
+/* css/journal.css */
+:root {
+    --primary-color: #4f46e5;
+    --secondary-color: #06b6d4;
+    --journal-color: #8b5cf6;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-radius: 20px;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+body {
+    background: var(--background-gradient);
+    background-attachment: fixed;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.main-content {
+    padding: 30px 0;
+}
+
+/* Page Header */
+.page-header {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.page-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--journal-color);
+    margin-bottom: 8px;
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Buttons */
+.btn-journal {
+    background: var(--journal-color);
+    border: none;
+    color: white;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-journal:hover {
+    background: #7c3aed;
+    transform: translateY(-2px);
+    color: white;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+}
+
+.btn-outline-journal {
+    border: 2px solid var(--journal-color);
+    color: var(--journal-color);
+    background: transparent;
+    border-radius: 12px;
+    padding: 10px 22px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-journal:hover {
+    background: var(--journal-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Journal Entry Cards (List View) */
+.journal-entry-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.journal-entry-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.entry-date {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.entry-mood {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mood-emoji {
+    font-size: 1.5rem;
+}
+
+.mood-text {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.entry-content {
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.entry-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.action-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.view-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.edit-btn {
+    background: var(--warning-color);
+    color: white;
+}
+
+.delete-btn {
+    background: var(--danger-color);
+    color: white;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    color: white;
+    opacity: 0.9;
+}
+
+/* Form Container */
+.form-container {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 35px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-label {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.form-control {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-control:focus {
+    border-color: var(--journal-color);
+    box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.15);
+    background: white;
+}
+
+.form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-select:focus {
+    border-color: var(--journal-color);
+    box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.15);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 150px;
+}
+
+textarea.near-limit {
+    border-color: var(--warning-color);
+}
+
+.form-text {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Journal View Container */
+.journal-view-container {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.entry-view-header {
+    background: linear-gradient(135deg, var(--journal-color) 0%, #a855f7 100%);
+    color: white;
+    padding: 30px;
+}
+
+.entry-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.entry-date-large {
+    display: flex;
+    align-items: center;
+}
+
+.date-primary {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.date-secondary {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.entry-mood-large {
+    text-align: right;
+}
+
+.mood-emoji-large {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.mood-label-large {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.entry-content-display {
+    padding: 35px;
+}
+
+.content-title {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.content-text {
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 1.1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.entry-view-actions {
+    padding: 25px 35px;
+    background: #f8fafc;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.action-group, .navigation-group {
+    display: flex;
+    gap: 10px;
+}
+
+.back-btn {
+    background: var(--text-secondary);
+    color: white;
+}
+
+.new-btn {
+    background: var(--success-color);
+    color: white;
+}
+
+.entry-stats {
+    padding: 20px 35px;
+    background: #f1f5f9;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+}
+
+/* Empty State */
+.empty-state {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 60px 40px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    color: var(--text-primary);
+    margin-bottom: 15px;
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+}
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .page-header .d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 20px;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+    }
+    
+    .entry-meta {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .entry-view-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .action-group, .navigation-group {
+        justify-content: center;
+    }
+    
+    .entry-stats {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .form-actions .ms-auto {
+        margin-left: 0 !important;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        padding: 15px 0;
+    }
+    
+    .page-header, .form-container, .journal-view-container {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+    
+    .journal-entry-card {
+        padding: 20px;
+    }
+    
+    .entry-content-display {
+        padding: 25px 20px;
+    }
+    
+    .entry-view-actions {
+        padding: 20px;
+    }
+}

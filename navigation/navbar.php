@@ -185,7 +185,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo ($current_page == 'journal') ? 'active' : ''; ?>" href="journal.php">
+                    <a class="nav-link <?php echo ($current_page == 'journal') ? 'active' : ''; ?>" href="journal_log.php">
                         <i class="fas fa-feather-alt journal-icon"></i>
                         Journal
                     </a>
