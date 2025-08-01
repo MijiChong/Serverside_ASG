@@ -194,20 +194,6 @@ try {
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // // Auto-resize textarea
-        // const textarea = document.getElementById('content');
-        // if (textarea) {
-        //     textarea.addEventListener('input', function() {
-        //         this.style.height = 'auto';
-        //         this.style.height = (this.scrollHeight) + 'px';
-        //     });
-
-        //     // Initial resize
-        //     textarea.style.height = 'auto';
-        //     textarea.style.height = (textarea.scrollHeight) + 'px';
-        // }
-    </script>
     <script src="js/update_journal.js"></script>
 </body>
 </html>

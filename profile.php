@@ -18,6 +18,29 @@ $uid = $_SESSION['uid']; // Pass UID to JS
     <link href="navigation/navbar.css" rel="stylesheet">
     <link href="css/profile.css" rel="stylesheet">
 
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+        
+        // Your Firebase config - replace with your actual config
+        const firebaseConfig = {
+        apiKey: "AIzaSyBq_7VkBVj7zTJJWTltVcOk6KIU4Z6kVfE",
+        authDomain: "serverside-39d3b.firebaseapp.com",
+        projectId: "serverside-39d3b",
+        storageBucket: "serverside-39d3b.firebasestorage.app",
+        messagingSenderId: "258572801740",
+        appId: "1:258572801740:web:e96cfc7baefe9b11da1469",
+        measurementId: "G-5NDQKLEGST"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Make db available globally
+        window.firestore = db;
+    </script>
+
     <!-- Pass UID to JS -->
     <script>
         const FIREBASE_UID = "<?= htmlspecialchars($uid); ?>";
@@ -53,6 +76,27 @@ $uid = $_SESSION['uid']; // Pass UID to JS
                     <form id="profileForm" enctype="multipart/form-data">
                         <div class="form-section">
                             <h3 class="section-title"><i class="fas fa-address-card me-2"></i>Personal Information</h3>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="username" placeholder="Username" readonly>
+                                        <label for="username"><i class="fas fa-user-tag me-1"></i>Username</label>
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle me-1"></i>Username cannot be changed
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="email" class="form-control" id="email" placeholder="Email" readonly>
+                                        <label for="email"><i class="fas fa-envelope me-1"></i>Email</label>
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle me-1"></i>Email cannot be changed
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -102,6 +146,14 @@ $uid = $_SESSION['uid']; // Pass UID to JS
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Loading overlay -->
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+        <p>Loading profile data...</p>
     </div>
 </div>
 

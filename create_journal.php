@@ -132,26 +132,6 @@ $default_date = date('Y-m-d');
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // // Auto-resize textarea
-        // const textarea = document.getElementById('content');
-        // textarea.addEventListener('input', function() {
-        //     this.style.height = 'auto';
-        //     this.style.height = (this.scrollHeight) + 'px';
-        // });
-
-        // // Character counter (optional enhancement)
-        // textarea.addEventListener('input', function() {
-        //     const charCount = this.value.length;
-        //     const maxChars = 5000;
-            
-        //     if (charCount > maxChars * 0.9) {
-        //         this.classList.add('near-limit');
-        //     } else {
-        //         this.classList.remove('near-limit');
-        //     }
-        // });
-    </script>
     <script src="js/create_journal.js"></script>
 </body>
 </html>

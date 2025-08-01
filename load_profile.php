@@ -11,6 +11,7 @@ if (!$firebase_uid) {
 }
 
 try {
+    // Get MySQL profile data (excluding username and email which come from Firestore)
     $stmt = $pdo->prepare("SELECT first_name, last_name, dob, phone, address, avatar_gradient
                            FROM personal_profile 
                            WHERE firebase_uid = ?");
@@ -18,11 +19,21 @@ try {
     $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($profile) {
+        // Return MySQL data - username and email will be loaded separately from Firestore
         echo json_encode($profile);
     } else {
-        echo json_encode(["error" => "Profile not found"]);
+        // Return empty profile structure with default avatar gradient
+        echo json_encode([
+            "first_name" => "",
+            "last_name" => "", 
+            "dob" => "",
+            "phone" => "",
+            "address" => "",
+            "avatar_gradient" => 1
+        ]);
     }
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(["error" => $e->getMessage()]);
 }
+?>

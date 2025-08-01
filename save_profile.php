@@ -16,13 +16,17 @@ $lastName  = $data['lastName'] ?? '';
 $dob       = !empty($data['dob']) ? $data['dob'] : null;
 $phone     = $data['phone'] ?? '';
 $address   = $data['address'] ?? '';
-$avatar    = $data['avatarGradient'] ?? 1;
+$avatar    = isset($data['avatarGradient']) ? (int)$data['avatarGradient'] : 1;
+
+// Log for debugging
+error_log("Avatar gradient received: " . $avatar);
 
 try {
     $stmt = $pdo->prepare("SELECT id FROM personal_profile WHERE firebase_uid = :uid");
     $stmt->execute([':uid' => $uid]);
 
     if ($stmt->fetch()) {
+        // Update existing record - don't update username and email as they come from Firestore
         $update = $pdo->prepare("
             UPDATE personal_profile
             SET first_name = :firstName,
@@ -30,10 +34,11 @@ try {
                 dob = :dob,
                 phone = :phone,
                 address = :address,
-                avatar_gradient = :avatar
+                avatar_gradient = :avatar,
+                updated_at = CURRENT_TIMESTAMP
             WHERE firebase_uid = :uid
         ");
-        $update->execute([
+        $result = $update->execute([
             ':firstName' => $firstName,
             ':lastName'  => $lastName,
             ':dob'       => $dob,
@@ -42,13 +47,16 @@ try {
             ':avatar'    => $avatar,
             ':uid'       => $uid
         ]);
+        
+        error_log("Update result: " . ($result ? 'success' : 'failed'));
     } else {
+        // Insert new record - username and email will be populated by sync_firestore_data.php
         $insert = $pdo->prepare("
             INSERT INTO personal_profile 
             (firebase_uid, first_name, last_name, dob, phone, address, avatar_gradient)
             VALUES (:uid, :firstName, :lastName, :dob, :phone, :address, :avatar)
         ");
-        $insert->execute([
+        $result = $insert->execute([
             ':uid'       => $uid,
             ':firstName' => $firstName,
             ':lastName'  => $lastName,
@@ -57,11 +65,15 @@ try {
             ':address'   => $address,
             ':avatar'    => $avatar
         ]);
+        
+        error_log("Insert result: " . ($result ? 'success' : 'failed'));
     }
 
-    echo json_encode(['status' => 'success', 'message' => 'Profile saved successfully']);
+    echo json_encode(['status' => 'success', 'message' => 'Profile saved successfully', 'avatar_gradient' => $avatar]);
     exit;
 } catch (Exception $e) {
+    error_log("Database error: " . $e->getMessage());
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     exit;
 }
+?>
