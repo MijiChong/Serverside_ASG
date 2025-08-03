@@ -8,66 +8,55 @@ if (!isset($_SESSION['uid'])) {
     exit();
 }
 
-$uid = $_SESSION['uid'];
 $data = json_decode(file_get_contents("php://input"), true);
-
+$uid = $data['uid'] ?? $_SESSION['uid'];
 $username = $data['username'] ?? '';
 $email = $data['email'] ?? '';
 
-// Validate input
-if (empty($username) && empty($email)) {
-    echo json_encode(['status' => 'error', 'message' => 'Username or email is required']);
-    exit();
-}
+// Log for debugging
+error_log("Syncing Firestore data - UID: $uid, Username: $username, Email: $email");
 
 try {
-    // Check if profile already exists
-    $stmt = $pdo->prepare("SELECT id, username, email FROM personal_profile WHERE firebase_uid = :uid");
+    // Check if user already exists
+    $stmt = $pdo->prepare("SELECT id FROM personal_profile WHERE firebase_uid = :uid");
     $stmt->execute([':uid' => $uid]);
-    $existingProfile = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($existingProfile) {
-        // Update only if the values have changed
-        $needsUpdate = false;
-        $updateFields = [];
-        $updateParams = [':uid' => $uid];
-
-        if ($existingProfile['username'] !== $username && !empty($username)) {
-            $updateFields[] = "username = :username";
-            $updateParams[':username'] = $username;
-            $needsUpdate = true;
-        }
-
-        if ($existingProfile['email'] !== $email && !empty($email)) {
-            $updateFields[] = "email = :email";
-            $updateParams[':email'] = $email;
-            $needsUpdate = true;
-        }
-
-        if ($needsUpdate) {
-            $updateFields[] = "updated_at = CURRENT_TIMESTAMP";
-            $updateQuery = "UPDATE personal_profile SET " . implode(', ', $updateFields) . " WHERE firebase_uid = :uid";
-            $updateStmt = $pdo->prepare($updateQuery);
-            $updateStmt->execute($updateParams);
-        }
+    
+    if ($stmt->fetch()) {
+        // Update existing record with Firestore data
+        $update = $pdo->prepare("
+            UPDATE personal_profile 
+            SET email = :email, 
+                display_name = :username,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE firebase_uid = :uid
+        ");
+        $result = $update->execute([
+            ':email' => $email,
+            ':username' => $username,
+            ':uid' => $uid
+        ]);
+        
+        error_log("Updated existing profile: " . ($result ? 'success' : 'failed'));
     } else {
-        // Insert new profile with Firestore data
+        // Create new record with Firestore data
         $insert = $pdo->prepare("
             INSERT INTO personal_profile 
-            (firebase_uid, username, email, avatar_gradient)
-            VALUES (:uid, :username, :email, 1)
+            (firebase_uid, email, display_name, avatar_gradient) 
+            VALUES (:uid, :email, :username, 1)
         ");
-        $insert->execute([
+        $result = $insert->execute([
             ':uid' => $uid,
-            ':username' => $username,
-            ':email' => $email
+            ':email' => $email,
+            ':username' => $username
         ]);
+        
+        error_log("Created new profile: " . ($result ? 'success' : 'failed'));
     }
-
+    
     echo json_encode(['status' => 'success', 'message' => 'Firestore data synced successfully']);
-    exit;
+    
 } catch (Exception $e) {
+    error_log("Sync error: " . $e->getMessage());
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-    exit;
 }
 ?>

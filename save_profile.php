@@ -19,14 +19,14 @@ $address   = $data['address'] ?? '';
 $avatar    = isset($data['avatarGradient']) ? (int)$data['avatarGradient'] : 1;
 
 // Log for debugging
-error_log("Avatar gradient received: " . $avatar);
+error_log("Saving profile - UID: $uid, Avatar gradient: $avatar");
 
 try {
     $stmt = $pdo->prepare("SELECT id FROM personal_profile WHERE firebase_uid = :uid");
     $stmt->execute([':uid' => $uid]);
 
     if ($stmt->fetch()) {
-        // Update existing record - don't update username and email as they come from Firestore
+        // Update existing record - don't touch email and display_name as they come from Firestore
         $update = $pdo->prepare("
             UPDATE personal_profile
             SET first_name = :firstName,
@@ -48,9 +48,9 @@ try {
             ':uid'       => $uid
         ]);
         
-        error_log("Update result: " . ($result ? 'success' : 'failed'));
+        error_log("Profile update result: " . ($result ? 'success' : 'failed'));
     } else {
-        // Insert new record - username and email will be populated by sync_firestore_data.php
+        // Insert new record - email and display_name will be populated by sync
         $insert = $pdo->prepare("
             INSERT INTO personal_profile 
             (firebase_uid, first_name, last_name, dob, phone, address, avatar_gradient)
@@ -66,14 +66,21 @@ try {
             ':avatar'    => $avatar
         ]);
         
-        error_log("Insert result: " . ($result ? 'success' : 'failed'));
+        error_log("Profile insert result: " . ($result ? 'success' : 'failed'));
     }
 
-    echo json_encode(['status' => 'success', 'message' => 'Profile saved successfully', 'avatar_gradient' => $avatar]);
-    exit;
+    if ($result) {
+        echo json_encode([
+            'status' => 'success', 
+            'message' => 'Profile saved successfully', 
+            'avatar_gradient' => $avatar
+        ]);
+    } else {
+        throw new Exception('Failed to save profile data');
+    }
+    
 } catch (Exception $e) {
-    error_log("Database error: " . $e->getMessage());
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-    exit;
+    error_log("Database error in save_profile: " . $e->getMessage());
+    echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
 }
 ?>

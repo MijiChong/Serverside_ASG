@@ -15,8 +15,27 @@ $uid = $_SESSION['uid']; // Pass UID to JS
     <title>MyTrackDiary - Profile</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Fixed CSS paths - Check these paths exist -->
     <link href="navigation/navbar.css" rel="stylesheet">
     <link href="css/profile.css" rel="stylesheet">
+    
+    <!-- Add fallback styles if CSS files don't load -->
+    <style>
+        /* Fallback styles in case external CSS doesn't load */
+        body { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+        .main-content { padding: 2rem 0; }
+        .profile-card { 
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 
     <!-- Firebase SDK -->
     <script type="module">
@@ -57,7 +76,10 @@ $uid = $_SESSION['uid']; // Pass UID to JS
                     <div class="profile-avatar-container">
                         <div id="avatarPreview" class="profile-avatar gradient-group-1" onclick="openAvatarModal()">
                             <span class="avatar-text">U</span>
-                            <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
+                            <div class="avatar-overlay">
+                                <i class="fas fa-camera"></i>
+                                <span class="overlay-text">Change Avatar</span>
+                            </div>
                         </div>
                         <!-- Hidden input to store gradient selection -->
                         <input type="hidden" name="gradient" id="selectedGradient" value="1">
@@ -161,23 +183,52 @@ $uid = $_SESSION['uid']; // Pass UID to JS
 <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-
             <div class="modal-header">
-                <h5 class="modal-title" id="avatarModalLabel">Choose Avatar Gradient</h5>
+                <h5 class="modal-title" id="avatarModalLabel">
+                    <i class="fas fa-palette me-2"></i>Choose Your Avatar Color
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body">
-                <div class="gradient-selection d-flex flex-wrap justify-content-center gap-2">
-                    <?php for ($i = 1; $i <= 6; $i++): ?>
-                        <div class="gradient-option gradient-group-<?= $i ?>" data-gradient="<?= $i ?>" onclick="selectGradient(<?= $i ?>)"></div>
+                <p class="text-center text-muted mb-4">Select a gradient color for your avatar</p>
+                <div class="gradient-selection d-flex flex-wrap justify-content-center gap-3">
+                    <?php 
+                    $gradientNames = [
+                        1 => 'Purple Ocean',
+                        2 => 'Pink Sunset', 
+                        3 => 'Blue Sky',
+                        4 => 'Green Forest',
+                        5 => 'Orange Glow',
+                        6 => 'Soft Mint'
+                    ];
+                    for ($i = 1; $i <= 6; $i++): ?>
+                        <div class="gradient-container text-center">
+                            <div class="gradient-option gradient-group-<?= $i ?>" 
+                                 data-gradient="<?= $i ?>" 
+                                 onclick="selectGradient(<?= $i ?>)"
+                                 title="<?= $gradientNames[$i] ?>">
+                                <span class="gradient-letter">
+                                    <?= substr($gradientNames[$i], 0, 1) ?>
+                                </span>
+                            </div>
+                            <small class="gradient-name"><?= $gradientNames[$i] ?></small>
+                        </div>
                     <?php endfor; ?>
                 </div>
+                <div class="preview-section mt-4 text-center">
+                    <p class="mb-2"><strong>Preview:</strong></p>
+                    <div id="previewAvatar" class="preview-avatar gradient-group-1">
+                        <span class="avatar-text">M</span>
+                    </div>
+                </div>
             </div>
-
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="applyAvatarSelection()">Apply</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="applyAvatarSelection()">
+                    <i class="fas fa-check me-1"></i>Apply Changes
+                </button>
             </div>
         </div>
     </div>
@@ -185,8 +236,8 @@ $uid = $_SESSION['uid']; // Pass UID to JS
 
 <!-- JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script type="module" src="js/profile.js"></script>
-<script src="js/avatar.js"></script>
+<script type="module" src="./js/profile.js"></script>
+<script src="./js/avatar.js"></script>
 
 <?php echo "<script>console.log('UID from PHP:', '".htmlspecialchars($uid)."');</script>"; ?>
 </body>

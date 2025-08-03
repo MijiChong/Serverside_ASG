@@ -4,7 +4,29 @@ const uid = typeof FIREBASE_UID !== 'undefined' ? FIREBASE_UID : null;
 if (!uid) console.error("FIREBASE_UID is missing!");
 
 function showNotification(message, type = "info") {
-    alert(`[${type.toUpperCase()}] ${message}`); // Replace this with custom toast later if needed
+    // Create a better notification system
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'success' ? 'success' : type === 'danger' ? 'danger' : 'info'} alert-dismissible fade show`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10001;
+        min-width: 300px;
+        animation: slideInRight 0.3s ease-out;
+    `;
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
 }
 
 function getSelectedGradient() {
@@ -60,40 +82,44 @@ async function loadUserData() {
     showLoading(true);
     
     try {
-        // Load both Firestore and MySQL data concurrently
-        const [firestoreData, mysqlResponse] = await Promise.all([
-            getFirestoreUserData(),
-            fetch("load_profile.php")
-        ]);
-        
-        const mysqlData = await mysqlResponse.json();
-        
+        // First get Firestore data
+        const firestoreData = await getFirestoreUserData();
         console.log("Firestore data:", firestoreData);
-        console.log("MySQL data:", mysqlData);
 
-        // Populate Firestore data (read-only fields)
-        document.getElementById("username").value = firestoreData.username || "";
-        document.getElementById("email").value = firestoreData.email || "";
-        
-        // Update avatar text with first letter of username or email
-        const avatarText = document.querySelector('.avatar-text');
-        if (avatarText) {
-            const firstLetter = (firestoreData.username || firestoreData.email || 'U').charAt(0).toUpperCase();
-            avatarText.textContent = firstLetter;
+        // Sync Firestore data to MySQL first if we have it
+        if (firestoreData.username || firestoreData.email) {
+            await syncFirestoreToMySQL(firestoreData.username, firestoreData.email);
         }
 
-        // Populate MySQL data (editable fields) - handle both error and success cases
-        if (!mysqlData.error) {
-            document.getElementById("firstName").value = mysqlData.first_name || "";
-            document.getElementById("lastName").value  = mysqlData.last_name  || "";
-            document.getElementById("dob").value       = mysqlData.dob        || "";
-            document.getElementById("phone").value     = mysqlData.phone      || "";
-            document.getElementById("address").value   = mysqlData.address    || "";
+        // Then load complete profile from MySQL (which now includes synced Firestore data)
+        const mysqlResponse = await fetch("load_profile.php");
+        const profileData = await mysqlResponse.json();
+        
+        console.log("MySQL profile data:", profileData);
+
+        if (profileData.error) {
+            console.warn("Error loading profile:", profileData.error);
+            // Use Firestore data as fallback
+            document.getElementById("username").value = firestoreData.username || "";
+            document.getElementById("email").value = firestoreData.email || "";
+        } else {
+            // Use MySQL data (which includes synced Firestore data)
+            document.getElementById("username").value = profileData.username || firestoreData.username || "";
+            document.getElementById("email").value = profileData.email || firestoreData.email || "";
+            
+            // Fill other profile fields
+            document.getElementById("firstName").value = profileData.first_name || "";
+            document.getElementById("lastName").value = profileData.last_name || "";
+            document.getElementById("dob").value = profileData.dob || "";
+            document.getElementById("phone").value = profileData.phone || "";
+            document.getElementById("address").value = profileData.address || "";
 
             // Handle avatar gradient
-            const avatarGradient = mysqlData.avatar_gradient || 1;
+            const avatarGradient = profileData.avatar_gradient || 1;
             const avatar = document.getElementById("avatarPreview");
-            avatar.className = `profile-avatar gradient-group-${avatarGradient}`;
+            if (avatar) {
+                avatar.className = `profile-avatar gradient-group-${avatarGradient}`;
+            }
 
             // Update hidden input
             const selectedGradient = document.getElementById('selectedGradient');
@@ -101,34 +127,22 @@ async function loadUserData() {
                 selectedGradient.value = avatarGradient;
             }
 
-            // Also visually select the corresponding gradient
+            // Visually select the corresponding gradient
             document.querySelectorAll(".gradient-option").forEach(el => {
                 el.classList.remove("selected");
                 if (parseInt(el.dataset.gradient) === parseInt(avatarGradient)) {
                     el.classList.add("selected");
                 }
             });
-        } else {
-            console.warn("No existing MySQL profile or error:", mysqlData.error);
-            // Set default values
-            document.getElementById("firstName").value = "";
-            document.getElementById("lastName").value = "";
-            document.getElementById("dob").value = "";
-            document.getElementById("phone").value = "";
-            document.getElementById("address").value = "";
-            
-            // Set default avatar
-            const avatar = document.getElementById("avatarPreview");
-            avatar.className = `profile-avatar gradient-group-1`;
-            const selectedGradient = document.getElementById('selectedGradient');
-            if (selectedGradient) {
-                selectedGradient.value = 1;
-            }
         }
         
-        // If this is the first time loading, sync Firestore data to MySQL
-        if (firestoreData.username || firestoreData.email) {
-            await syncFirestoreToMySQL(firestoreData.username, firestoreData.email);
+        // Update avatar text with first letter of username or email
+        const avatarText = document.querySelector('.avatar-text');
+        if (avatarText) {
+            const usernameField = document.getElementById("username").value;
+            const emailField = document.getElementById("email").value;
+            const firstLetter = (usernameField || emailField || 'U').charAt(0).toUpperCase();
+            avatarText.textContent = firstLetter;
         }
         
     } catch (error) {
@@ -155,6 +169,8 @@ async function syncFirestoreToMySQL(username, email) {
         const result = await response.json();
         if (result.status !== 'success') {
             console.warn("Failed to sync Firestore data to MySQL:", result.message);
+        } else {
+            console.log("Successfully synced Firestore data to MySQL");
         }
     } catch (error) {
         console.error("Error syncing Firestore data:", error);
@@ -173,23 +189,24 @@ function waitForFirestore() {
 // Start loading when page is ready
 document.addEventListener('DOMContentLoaded', waitForFirestore);
 
+// Form submission handler
 document.getElementById("profileForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const selectedGradient = getSelectedGradient();
-    console.log("Selected gradient for saving:", selectedGradient); // Debug log
+    console.log("Selected gradient for saving:", selectedGradient);
 
     const profileData = {
         uid: uid,
         firstName: document.getElementById("firstName").value.trim(),
-        lastName:  document.getElementById("lastName").value.trim(),
-        dob:       document.getElementById("dob").value,
-        phone:     document.getElementById("phone").value.trim(),
-        address:   document.getElementById("address").value.trim(),
+        lastName: document.getElementById("lastName").value.trim(),
+        dob: document.getElementById("dob").value,
+        phone: document.getElementById("phone").value.trim(),
+        address: document.getElementById("address").value.trim(),
         avatarGradient: selectedGradient
     };
 
-    console.log("Profile data being sent:", profileData); // Debug log
+    console.log("Profile data being sent:", profileData);
 
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
@@ -204,7 +221,7 @@ document.getElementById("profileForm").addEventListener("submit", async (e) => {
         });
         const result = await response.json();
 
-        console.log("Save result:", result); // Debug log
+        console.log("Save result:", result);
 
         if (result.status === 'success') {
             showNotification("Profile updated successfully!", "success");
@@ -220,8 +237,12 @@ document.getElementById("profileForm").addEventListener("submit", async (e) => {
     }
 });
 
+// Reset form function
 function resetForm() {
     if (confirm("Are you sure you want to reset all changes?")) {
         loadUserData();
     }
 }
+
+// Make resetForm available globally
+window.resetForm = resetForm;

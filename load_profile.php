@@ -11,19 +11,30 @@ if (!$firebase_uid) {
 }
 
 try {
-    // Get MySQL profile data (excluding username and email which come from Firestore)
-    $stmt = $pdo->prepare("SELECT first_name, last_name, dob, phone, address, avatar_gradient
+    // Get complete profile data including username and email from MySQL
+    $stmt = $pdo->prepare("SELECT email, display_name, first_name, last_name, dob, phone, address, avatar_gradient
                            FROM personal_profile 
                            WHERE firebase_uid = ?");
     $stmt->execute([$firebase_uid]);
     $profile = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($profile) {
-        // Return MySQL data - username and email will be loaded separately from Firestore
-        echo json_encode($profile);
-    } else {
-        // Return empty profile structure with default avatar gradient
+        // Return all data including username and email from MySQL
         echo json_encode([
+            "email" => $profile['email'] ?? "",
+            "username" => $profile['display_name'] ?? "",
+            "first_name" => $profile['first_name'] ?? "",
+            "last_name" => $profile['last_name'] ?? "", 
+            "dob" => $profile['dob'] ?? "",
+            "phone" => $profile['phone'] ?? "",
+            "address" => $profile['address'] ?? "",
+            "avatar_gradient" => (int)($profile['avatar_gradient'] ?? 1)
+        ]);
+    } else {
+        // Return empty profile structure with default values
+        echo json_encode([
+            "email" => "",
+            "username" => "",
             "first_name" => "",
             "last_name" => "", 
             "dob" => "",
@@ -33,6 +44,7 @@ try {
         ]);
     }
 } catch (Exception $e) {
+    error_log("Load profile error: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(["error" => $e->getMessage()]);
 }
