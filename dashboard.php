@@ -103,7 +103,7 @@ $uid = $_SESSION['uid'];
                             Track your income and expenses, categorize transactions, and monitor your financial health. 
                             Stay on top of your budget and spending habits.
                         </p>
-                        <a href="transactions.php" class="module-btn transaction-btn">
+                        <a href="MoneyTracker_design.php" class="module-btn transaction-btn">
                             <i class="fas fa-plus me-2"></i>Add Transaction
                         </a>
                     </div>
@@ -133,7 +133,7 @@ $uid = $_SESSION['uid'];
                 <a href="journal.php" class="quick-btn">
                     <i class="fas fa-book me-1"></i>New Journal Entry
                 </a>
-                <a href="transactions.php" class="quick-btn">
+                <a href="MoneyTracker_design.php" class="quick-btn">
                     <i class="fas fa-wallet me-1"></i>Add Transaction
                 </a>
                 <a href="habits.php" class="quick-btn">
