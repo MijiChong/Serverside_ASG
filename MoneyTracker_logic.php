@@ -14,7 +14,6 @@ if (!isset($_SESSION['uid'])) {
 
 $uid = $_SESSION['uid'];
 
-require_once 'MoneyTracker_classes/User.php';
 require_once 'MoneyTracker_classes/Category.php';
 require_once 'MoneyTracker_classes/Transaction.php';
 require_once 'MoneyTracker_classes/Cashbook.php';
@@ -32,6 +31,7 @@ $success = '';
 // --- Cashbook Management Logic ---
 $user_cashbooks = $cashbook->getCashbooksByUserId($user_id);
 $current_cashbook_id = null;
+$cashbook_count = count($user_cashbooks); // Get the total count of cashbooks for the user
 
 // If no cashbooks exist for the user, create a default one
 if (empty($user_cashbooks)) {
@@ -190,7 +190,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cashbook_id_to_delete = $_POST['cashbook_id_to_delete'];
         if (!$cashbook_id_to_delete) {
             $error = 'No cashbook selected for deletion.';
-        } else {
+        } elseif ($cashbook_count <= 1) { // Check if only one cashbook remains
+            $error = 'You cannot delete your last remaining cashbook.';
+        }else {
             try {
                 $cashbook->deleteCashbook($cashbook_id_to_delete, $user_id);
                 $success = 'Cashbook deleted successfully!';

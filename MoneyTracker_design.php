@@ -46,15 +46,15 @@ require_once 'MoneyTracker_logic.php'; // Include the PHP logic file
         <?php endif; ?>
 
         <!-- NEW LOCATION FOR CASHBOOK SELECTOR -->
-        <div class="row mb-4"> <!-- Added margin-bottom for spacing -->
-            <div class="col-md-8 offset-md-2"> <!-- Center the selector and make it wider -->
-                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center"> <!-- Center contents horizontally -->
+        <div class="row mb-4">
+            <div class="col-md-8 offset-md-2">
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center">
                     <label for="cashbook_selector" class="form-label me-md-2 mb-2 mb-md-0 text-nowrap">Current Cashbook:</label>
-                    <form method="GET" class="d-flex align-items-center flex-grow-1 w-100 w-md-auto"> <!-- Use flex-grow-1 to make select fill space -->
+                    <form method="GET" class="d-flex align-items-center flex-grow-1 w-100 w-md-auto">
                         <select name="cashbook_id" id="cashbook_selector" class="form-select me-2" onchange="this.form.submit()">
                             <?php if (!empty($user_cashbooks)): ?>
                                 <?php foreach ($user_cashbooks as $cb): ?>
-                                    <option value="<?php echo htmlspecialchars($cb['cashbook_id']); ?>" 
+                                    <option value="<?php echo htmlspecialchars($cb['cashbook_id']); ?>"
                                         <?php echo ($current_cashbook_id == $cb['cashbook_id']) ? 'selected' : ''; ?>>
                                         <?php echo htmlspecialchars($cb['cashbook_name']); ?>
                                     </option>
@@ -66,10 +66,10 @@ require_once 'MoneyTracker_logic.php'; // Include the PHP logic file
                         <button type="button" class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addCashbookModal">
                             <i class="fas fa-plus"></i> Add New
                         </button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#renameCashbookModal" <?php echo !$current_cashbook_id ? 'disabled' : ''; ?> data-current-cashbook-name="<?php echo htmlspecialchars($current_cashbook_name); ?>">
+                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#renameCashbookModal" <?php echo (!$current_cashbook_id || count($user_cashbooks) === 0) ? 'disabled' : ''; ?> data-current-cashbook-name="<?php echo htmlspecialchars($current_cashbook_name); ?>">
                             <i class="fas fa-edit"></i> Rename
                         </button>
-                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCashbookModal" <?php echo !$current_cashbook_id ? 'disabled' : ''; ?>>
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCashbookModal" <?php echo ($current_cashbook_id && count($user_cashbooks) > 1) ? '' : 'disabled'; ?>>
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </form>
