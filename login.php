@@ -38,6 +38,11 @@ session_start();
                     <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                 </div>
 
+                <div class="text-end mb-3">
+                <a href="forgot_password.php" class="text-decoration-none text-primary">Forgot Password?</a>
+                </div>
+
+
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-sign-in-alt me-2"></i>
                     Login
@@ -47,6 +52,7 @@ session_start();
             <div class="signup-link">
                 Don't have an account? <a href="register.php">Sign up here</a>
             </div>
+            
         </div>
     </div>
     <!-- Loading Spinner -->

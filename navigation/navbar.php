@@ -220,7 +220,7 @@
                         <li><a class="dropdown-item" href="profile.php">
                             <i class="fas fa-user-circle"></i>My Profile
                         </a></li>
-                        <li><a class="dropdown-item" href="settings.php">
+                        <li><a class="dropdown-item" href="setting.php">
                             <i class="fas fa-cog"></i>Settings
                         </a></li>
                         <li><hr class="dropdown-divider"></li>
