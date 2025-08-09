@@ -1,4 +1,4 @@
-/* Profile Page Styles - Matching Dashboard Design */
+/* /css/profile.css - Fixed Floating Labels */
 :root {
     --primary-color: #4f46e5;
     --secondary-color: #06b6d4;
@@ -24,8 +24,8 @@ body {
     padding: 30px 0;
 }
 
-/* Profile Header - Matching Dashboard Welcome Section */
-.profile-header {
+/* Welcome Section - Matching Dashboard */
+.welcome-section {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
     padding: 40px;
@@ -34,14 +34,14 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.profile-title {
+.welcome-title {
     font-size: 2.5rem;
     font-weight: bold;
     color: var(--primary-color);
     margin-bottom: 15px;
 }
 
-.profile-subtitle {
+.welcome-subtitle {
     color: #6b7280;
     font-size: 1.1rem;
     margin-bottom: 25px;
@@ -117,7 +117,7 @@ body {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Enhanced Gradient Classes - Matching Dashboard */
+/* Gradient Classes - Matching Dashboard */
 .gradient-group-1 { 
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
 }
@@ -137,8 +137,8 @@ body {
     background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); 
 }
 
-/* Profile Card - Matching Dashboard Module Cards */
-.profile-card {
+/* Module Card - Exactly Matching Dashboard */
+.module-card {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
     padding: 30px;
@@ -149,7 +149,7 @@ body {
     height: 100%;
 }
 
-.profile-card:hover {
+.module-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
@@ -159,64 +159,142 @@ body {
     margin-bottom: 30px;
 }
 
-.section-title {
+.module-title {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 15px;
     color: #1f2937;
 }
 
-.section-title i {
+.module-title i {
     color: var(--primary-color);
     font-size: 1.5rem;
 }
 
-/* Form Controls - Enhanced to Match Dashboard */
+/* FIXED: Bootstrap-Compatible Floating Labels */
 .form-floating {
     position: relative;
     margin-bottom: 20px;
 }
 
-.form-control {
+/* Form Controls Styling */
+.form-floating > .form-control,
+.form-floating > .form-select {
+    height: calc(3.5rem + 2px);
+    min-height: calc(3.5rem + 2px);
+    line-height: 1.25;
     background: rgba(248, 250, 252, 0.8);
     border: 2px solid transparent;
-    border-radius: 10px;
-    padding: 12px 16px;
+    border-radius: 12px;
+    padding: 1rem 0.75rem 0.25rem 0.75rem !important;
     font-size: 1rem;
     transition: all 0.3s ease;
 }
 
-.form-control:focus {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
-    transform: translateY(-2px);
+/* Ensure placeholder is transparent */
+.form-floating > .form-control::placeholder,
+.form-floating > .form-select::placeholder {
+    color: transparent !important;
 }
 
-.form-control[readonly] {
+/* Focus states */
+.form-floating > .form-control:focus,
+.form-floating > .form-select:focus {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
+    outline: 0;
+}
+
+/* Readonly styling */
+.form-floating > .form-control[readonly] {
     background: rgba(248, 250, 252, 0.5);
     color: #6b7280;
     cursor: not-allowed;
+    border-color: rgba(107, 114, 128, 0.2);
 }
 
+/* CRITICAL FIX: Floating Label Positioning */
 .form-floating > label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 1rem 0.75rem;
+    pointer-events: none;
+    border: 2px solid transparent;
+    transform-origin: 0 0;
+    transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
     color: #6b7280;
     font-weight: 500;
-    padding: 12px 16px;
+    font-size: 1rem;
     display: flex;
     align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: 2;
 }
 
+/* CRITICAL: Make labels float when input has content */
 .form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label {
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select:focus ~ label,
+.form-floating > .form-select:not([value=""]):not(:has(option[value=""]:checked)) ~ label,
+.form-floating.has-value > label {
+    opacity: 0.65;
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+    color: var(--primary-color);
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+}
+
+/* CRITICAL FIX: Specific handling for textarea with content */
+.form-floating > textarea.form-control:not(:placeholder-shown) ~ label,
+.form-floating > textarea.form-control:focus ~ label,
+.form-floating.has-value > textarea.form-control ~ label {
+    opacity: 0.65 !important;
+    transform: scale(0.85) translateY(-0.75rem) translateX(0.15rem) !important;
+    color: var(--primary-color) !important;
+    font-weight: 600 !important;
+    padding: 0.25rem 0.75rem !important;
+    height: auto !important;
+}
+
+/* Textarea specific styling */
+.form-floating > textarea.form-control {
+    min-height: calc(4.5rem + 2px);
+    height: auto;
+    padding-top: 1.625rem !important;
+    padding-bottom: 0.625rem !important;
+    resize: vertical;
+}
+
+/* Textarea label positioning */
+.form-floating > textarea.form-control ~ label {
+    height: auto;
+    padding: 1.625rem 0.75rem 0.625rem;
+    align-items: flex-start;
+    padding-top: 1.625rem;
+}
+
+/* REMOVED DUPLICATE - this is now handled above with !important */
+
+/* Date input specific handling */
+.form-floating > input[type="date"]:not(:focus):invalid ~ label,
+.form-floating > input[type="date"]:not(:focus):not(:placeholder-shown) ~ label {
+    opacity: 0.65;
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
     color: var(--primary-color);
     font-weight: 600;
 }
 
+/* Form text styling */
 .form-text {
     color: #6b7280;
     font-size: 0.85rem;
     margin-top: 5px;
+    padding-left: 5px;
 }
 
 /* Form Actions - Matching Dashboard Button Style */
@@ -224,14 +302,14 @@ body {
     display: flex;
     gap: 15px;
     justify-content: center;
-    margin-top: 30px;
+    margin-top: 40px;
     flex-wrap: wrap;
 }
 
 .module-btn {
     border: none;
     border-radius: 10px;
-    padding: 10px 20px;
+    padding: 12px 25px;
     font-weight: 600;
     transition: all 0.3s ease;
     text-decoration: none;
@@ -239,7 +317,7 @@ body {
     color: white;
     font-size: 1rem;
     cursor: pointer;
-    min-width: 150px;
+    min-width: 160px;
     text-align: center;
 }
 
@@ -255,53 +333,27 @@ body {
     transform: translateY(-2px);
     color: white;
     opacity: 0.9;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Quick Actions - Matching Dashboard */
-.quick-actions {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    padding: 30px;
-    margin-top: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+.module-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
-.quick-actions h3 {
-    color: var(--primary-color);
-    margin-bottom: 20px;
-}
-
-.quick-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 20px;
-    margin: 5px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.quick-btn:hover {
-    background: #4338ca;
-    transform: translateY(-2px);
-    color: white;
-}
-
-/* Avatar Modal Styles - Enhanced */
+/* Avatar Modal Styles */
 .modal-content {
     border-radius: 20px;
     border: none;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
     background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
 }
 
 .modal-header {
     border-bottom: 1px solid rgba(79, 70, 229, 0.1);
-    padding: 20px 30px;
+    padding: 25px 30px;
     background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(79, 70, 229, 0.1) 100%);
     border-radius: 20px 20px 0 0;
 }
@@ -318,9 +370,10 @@ body {
 
 .modal-footer {
     border-top: 1px solid rgba(79, 70, 229, 0.1);
-    padding: 20px 30px;
+    padding: 25px 30px;
     justify-content: center;
     gap: 15px;
+    border-radius: 0 0 20px 20px;
 }
 
 /* Gradient Selection */
@@ -398,6 +451,7 @@ body {
     background: rgba(79, 70, 229, 0.05);
     border-radius: 15px;
     padding: 20px;
+    border: 1px solid rgba(79, 70, 229, 0.1);
 }
 
 .preview-avatar {
@@ -430,20 +484,28 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 10000;
+    backdrop-filter: blur(5px);
 }
 
 .loading-spinner {
     background: rgba(255, 255, 255, 0.95);
-    padding: 30px;
+    padding: 40px;
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
     color: var(--primary-color);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .loading-spinner i {
     color: var(--primary-color);
     margin-bottom: 15px;
+}
+
+.loading-spinner p {
+    margin: 0;
+    font-weight: 500;
+    color: #6b7280;
 }
 
 /* Animations - Matching Dashboard */
@@ -491,23 +553,13 @@ body {
     animation: pulse 0.6s ease-in-out;
 }
 
-/* Loading state for avatar */
-.avatar-loading {
-    opacity: 0.6;
+/* Button loading state */
+.module-btn.loading {
+    opacity: 0.7;
     pointer-events: none;
 }
 
-.avatar-loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30px;
-    height: 30px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top: 3px solid white;
-    border-radius: 50%;
+.module-btn.loading i {
     animation: spin 1s linear infinite;
 }
 
@@ -517,14 +569,18 @@ body {
         padding: 20px 0;
     }
     
-    .profile-header,
-    .profile-card {
+    .welcome-section,
+    .module-card {
         margin: 0 15px;
-        padding: 20px;
+        padding: 25px 20px;
     }
     
-    .profile-title {
+    .welcome-title {
         font-size: 2rem;
+        text-align: center;
+    }
+    
+    .welcome-subtitle {
         text-align: center;
     }
     
@@ -563,15 +619,48 @@ body {
         font-size: 1.5rem;
     }
     
-    .quick-actions {
+    .modal-body {
         padding: 20px;
-        margin: 0 15px;
     }
     
-    .quick-btn {
-        display: block;
-        width: 100%;
-        text-align: center;
-        margin: 8px 0;
+    .modal-header,
+    .modal-footer {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .welcome-section {
+        padding: 25px 15px;
+    }
+    
+    .profile-avatar {
+        width: 90px;
+        height: 90px;
+        font-size: 2rem;
+    }
+    
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        height: calc(3.25rem + 2px);
+        min-height: calc(3.25rem + 2px);
+        padding: 0.875rem 0.75rem 0.25rem 0.75rem !important;
+        font-size: 0.95rem;
+    }
+    
+    .form-floating > label {
+        padding: 0.875rem 0.75rem;
+        font-size: 0.95rem;
+    }
+    
+    .form-floating > textarea.form-control {
+        min-height: calc(4rem + 2px);
+        padding-top: 1.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+    
+    .form-floating > textarea.form-control ~ label {
+        padding-top: 1.5rem;
+        padding-bottom: 0.5rem;
     }
 }

@@ -7,6 +7,8 @@ if (!isset($_SESSION['uid'])) {
     exit;
 }
 $uid = $_SESSION['uid'];
+
+require_once 'setting_loader.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,8 +24,20 @@ $uid = $_SESSION['uid'];
     
     <!-- Main Dashboard CSS -->
     <link href="css/dashboard.css" rel="stylesheet">
+
+    <link href="css/global-setting.css" rel="stylesheet">
+    <style>
+    :root {
+        --primary-color: #4f46e5;
+        --secondary-color: #06b6d4;
+        --accent-color: #f59e0b;
+        --success-color: #10b981;
+        /* Add this line to apply user's selected gradient */
+        <?php echo getGradientCSS(); ?>
+    }
+    </style>
 </head>
-<body>
+<body <?php echo getBodyClass(); ?>>
     <!-- Navigation Bar -->
     <?php include 'navigation/navbar.php'; ?>
 

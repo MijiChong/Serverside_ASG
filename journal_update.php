@@ -5,7 +5,7 @@ if (!isset($_SESSION['uid'])) {
     header("Location: login.php");
     exit();
 }
-
+require_once 'setting_loader.php';
 require 'mysql.php';
 
 $uid = $_SESSION['uid'];
@@ -13,7 +13,7 @@ $id = $_GET['id'] ?? null;
 $error_message = '';
 
 if (!$id) {
-    header("Location: log_journal.php");
+    header("Location: journal_log.php");
     exit();
 }
 
@@ -70,8 +70,19 @@ try {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="navigation/navbar.css" rel="stylesheet">
     <link href="css/journal.css" rel="stylesheet">
+    <link href="css/global-setting.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            /* Apply user's selected gradient */
+            <?php echo getGradientCSS(); ?>
+        }
+    </style>
 </head>
-<body>
+<body <?php echo getBodyClass(); ?>>
     <?php include 'navigation/navbar.php'; ?>
 
     <div class="main-content">
@@ -86,7 +97,7 @@ try {
                         <p class="page-subtitle">Update your thoughts and reflections</p>
                     </div>
                     <div>
-                        <a href="view_journal.php?id=<?= $id ?>" class="btn btn-outline-journal me-2">
+                        <a href="journal_view.php?id=<?= $id ?>" class="btn btn-outline-journal me-2">
                             <i class="fas fa-eye me-2"></i>View Entry
                         </a>
                         <a href="journal_log.php" class="btn btn-outline-journal">
@@ -164,13 +175,13 @@ try {
                             <button type="submit" class="btn btn-journal">
                                 <i class="fas fa-save me-2"></i>Update Entry
                             </button>
-                            <a href="view_journal.php?id=<?= $id ?>" class="btn btn-outline-secondary ms-2">
+                            <a href="journal_view.php?id=<?= $id ?>" class="btn btn-outline-secondary ms-2">
                                 <i class="fas fa-eye me-2"></i>View
                             </a>
                             <a href="journal_log.php" class="btn btn-outline-secondary ms-2">
                                 <i class="fas fa-times me-2"></i>Cancel
                             </a>
-                            <a href="delete_journal.php?id=<?= $id ?>" 
+                            <a href="journal_delete.php?id=<?= $id ?>" 
                                class="btn btn-outline-danger ms-auto"
                                onclick="return confirm('Are you sure you want to delete this entry? This action cannot be undone.')">
                                 <i class="fas fa-trash me-2"></i>Delete Entry
@@ -194,6 +205,6 @@ try {
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="js/update_journal.js"></script>
+    <script src="js/journal_update.js"></script>
 </body>
 </html>

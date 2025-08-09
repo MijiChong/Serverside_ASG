@@ -5,8 +5,8 @@ if (!isset($_SESSION['uid'])) {
     header("Location: login.php");
     exit();
 }
-
 require 'mysql.php';
+require_once 'setting_loader.php';
 
 $firebase_uid = $_SESSION['uid'];
 $entries = [];
@@ -42,8 +42,19 @@ $mood_emojis = [
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="navigation/navbar.css" rel="stylesheet">
     <link href="css/journal.css" rel="stylesheet">
+    <link href="css/global-setting.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            /* Apply user's selected gradient */
+            <?php echo getGradientCSS(); ?>
+        }
+    </style>
 </head>
-<body>
+<body <?php echo getBodyClass(); ?>>
     <?php include 'navigation/navbar.php'; ?>
 
     <div class="main-content">
@@ -57,7 +68,7 @@ $mood_emojis = [
                         </h1>
                         <p class="page-subtitle">Reflect on your thoughts and track your personal growth</p>
                     </div>
-                    <a href="create_journal.php" class="btn btn-journal">
+                    <a href="journal_create.php" class="btn btn-journal">
                         <i class="fas fa-plus me-2"></i>New Entry
                     </a>
                 </div>
@@ -95,13 +106,13 @@ $mood_emojis = [
                                 </div>
                                 
                                 <div class="entry-actions">
-                                    <a href="view_journal.php?id=<?= $entry['id'] ?>" class="action-btn view-btn">
+                                    <a href="journal_view.php?id=<?= $entry['id'] ?>" class="action-btn view-btn">
                                         <i class="fas fa-eye me-1"></i>View
                                     </a>
-                                    <a href="update_journal.php?id=<?= $entry['id'] ?>" class="action-btn edit-btn">
+                                    <a href="journal_update.php?id=<?= $entry['id'] ?>" class="action-btn edit-btn">
                                         <i class="fas fa-edit me-1"></i>Edit
                                     </a>
-                                    <a href="delete_journal.php?id=<?= $entry['id'] ?>" 
+                                    <a href="journal_delete.php?id=<?= $entry['id'] ?>" 
                                        class="action-btn delete-btn"
                                        onclick="return confirm('Are you sure you want to delete this entry?')">
                                         <i class="fas fa-trash me-1"></i>Delete
@@ -118,7 +129,7 @@ $mood_emojis = [
                     </div>
                     <h3>No journal entries yet</h3>
                     <p>Start your journaling journey by creating your first entry</p>
-                    <a href="create_journal.php" class="btn btn-journal">
+                    <a href="journal_create.php" class="btn btn-journal">
                         <i class="fas fa-plus me-2"></i>Create First Entry
                     </a>
                 </div>

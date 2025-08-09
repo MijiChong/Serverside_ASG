@@ -5,14 +5,14 @@ if (!isset($_SESSION['uid'])) {
     header("Location: login.php");
     exit();
 }
-
+require_once 'setting_loader.php';
 require 'mysql.php';
 
 $uid = $_SESSION['uid'];
 $id = $_GET['id'] ?? null;
 
 if (!$id) {
-    header("Location: log_journal.php");
+    header("Location: journal_log.php");
     exit();
 }
 
@@ -46,8 +46,19 @@ $mood_data = [
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="navigation/navbar.css" rel="stylesheet">
     <link href="css/journal.css" rel="stylesheet">
+    <link href="css/global-setting.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            /* Apply user's selected gradient */
+            <?php echo getGradientCSS(); ?>
+        }
+    </style>
 </head>
-<body>
+<body <?php echo getBodyClass(); ?>>
     <?php include 'navigation/navbar.php'; ?>
 
     <div class="main-content">
@@ -62,7 +73,7 @@ $mood_data = [
                         <p class="page-subtitle">Your personal reflection</p>
                     </div>
                     <div>
-                        <a href="update_journal.php?id=<?= $id ?>" class="btn btn-journal me-2">
+                        <a href="journal_update.php?id=<?= $id ?>" class="btn btn-journal me-2">
                             <i class="fas fa-edit me-2"></i>Edit Entry
                         </a>
                         <a href="journal_log.php" class="btn btn-outline-journal">
@@ -116,10 +127,10 @@ $mood_data = [
                     <!-- Entry Actions -->
                     <div class="entry-view-actions">
                         <div class="action-group">
-                            <a href="update_journal.php?id=<?= $entry['id'] ?>" class="action-btn edit-btn">
+                            <a href="journal_update.php?id=<?= $entry['id'] ?>" class="action-btn edit-btn">
                                 <i class="fas fa-edit me-2"></i>Edit Entry
                             </a>
-                            <a href="delete_journal.php?id=<?= $entry['id'] ?>" 
+                            <a href="journal_delete.php?id=<?= $entry['id'] ?>" 
                                class="action-btn delete-btn"
                                onclick="return confirm('Are you sure you want to delete this entry? This action cannot be undone.')">
                                 <i class="fas fa-trash me-2"></i>Delete Entry
@@ -130,7 +141,7 @@ $mood_data = [
                             <a href="journal_log.php" class="action-btn back-btn">
                                 <i class="fas fa-list me-2"></i>All Entries
                             </a>
-                            <a href="create_journal.php" class="action-btn new-btn">
+                            <a href="journal_create.php" class="action-btn new-btn">
                                 <i class="fas fa-plus me-2"></i>New Entry
                             </a>
                         </div>

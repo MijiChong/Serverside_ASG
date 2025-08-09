@@ -1,0 +1,38 @@
+/* global-settings.css - Include this in all pages */
+
+/* Dynamic background gradient based on user settings */
+:root {
+    /* Default gradient - will be overridden by user settings */
+    --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+}
+
+/* Apply user's background gradient */
+body {
+    background: var(--background-gradient);
+    background-attachment: fixed;
+    transition: all 0.3s ease;
+}
+
+/* Dark mode styles */
+body.dark-mode {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* Invert back certain elements in dark mode */
+body.dark-mode img,
+body.dark-mode .user-avatar,
+body.dark-mode .gradient-preview,
+body.dark-mode video,
+body.dark-mode iframe {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* Gradient definitions for dynamic loading */
+.gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+.gradient-2 { background: linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #6c5ce7 100%); }
+.gradient-3 { background: linear-gradient(135deg, #fd79a8 0%, #e84393 50%, #f39c12 100%); }
+.gradient-4 { background: linear-gradient(135deg, #00b894 0%, #00a085 50%, #55a3ff 100%); }
+.gradient-5 { background: linear-gradient(135deg, #3742fa 0%, #2f3542 50%, #70a1ff 100%); }
+.gradient-6 { background: linear-gradient(135deg, #ff9ff3 0%, #f368e0 50%, #feca57 100%); }
+.gradient-7 { background: linear-gradient(135deg, #2c2c54 0%, #40407a 50%, #706fd3 100%); }
+.gradient-8 { background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%); }

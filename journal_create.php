@@ -5,7 +5,7 @@ if (!isset($_SESSION['uid'])) {
     header("Location: login.php");
     exit();
 }
-
+require_once 'setting_loader.php'; 
 require 'mysql.php';
 
 $success_message = '';
@@ -43,8 +43,19 @@ $default_date = date('Y-m-d');
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="navigation/navbar.css" rel="stylesheet">
     <link href="css/journal.css" rel="stylesheet">
+    <link href="css/global-setting.css" rel="stylesheet">
+        <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            /* Apply user's selected gradient */
+            <?php echo getGradientCSS(); ?>
+        }
+    </style>
 </head>
-<body>
+<body <?php echo getBodyClass(); ?>>
     <?php include 'navigation/navbar.php'; ?>
 
     <div class="main-content">
