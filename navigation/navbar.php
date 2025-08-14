@@ -191,7 +191,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo ($current_page == 'transactions') ? 'active' : ''; ?>" href="transactions.php">
+                    <a class="nav-link <?php echo ($current_page == 'transactions') ? 'active' : ''; ?>" href="MoneyTracker_design.php">
                         <i class="fas fa-coins transaction-icon"></i>
                         Transactions
                     </a>
