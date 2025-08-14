@@ -1,0 +1,78 @@
+/* =============================================================================
+   css/MoneyTracker_style.css - Custom styles for the Cashbook App dashboard
+   ============================================================================= */
+
+body { 
+    /* Original: background-color: #f8f9fa; */
+    /* New: Subtle linear gradient background for an attractive yet simple look */
+    /* Updated: Slightly more color, but still light and harmonious */
+    /* Further Updated: A warmer, slightly more vibrant gradient for added attractiveness */
+    background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%); /* A soft, warm blue-white to a gentle light blue gradient */
+    background-attachment: fixed; /* Keeps the background fixed when content scrolls */
+    font-family: 'Inter', sans-serif; 
+    min-height: 100vh; /* Ensures the gradient covers the full viewport height */
+}
+
+.balance-card { 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+    color: white; 
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.stat-card { 
+    border: none; 
+    border-radius: 15px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+    transition: transform 0.3s;
+}
+.stat-card:hover { 
+    transform: translateY(-5px); 
+}
+.transaction-card { 
+    border-left: 4px solid #007bff; 
+    transition: all 0.3s;
+    border-radius: 8px; /* Added rounded corners */
+    margin-bottom: 8px; /* Spacing between transactions */
+}
+.transaction-card:hover { 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+    transform: translateX(5px);
+}
+.income { 
+    border-left-color: #28a745 !important; 
+}
+.expense { 
+    border-left-color: #dc3545 !important; 
+}
+.category-badge { 
+    display: inline-block; 
+    padding: 5px 10px; 
+    border-radius: 20px; 
+    color: white; 
+    font-size: 12px;
+    margin-top: 5px; /* Spacing for badge */
+}
+.modal-header { 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+    color: white; 
+    border-top-left-radius: 15px; 
+    border-top-right-radius: 15px; 
+}
+.modal-content { 
+    border-radius: 15px; 
+} /* Added rounded corners to modal */
+.btn-gradient { 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+    border: none; 
+    color: white;
+    border-radius: 8px; /* Added rounded corners */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.btn-gradient:hover { 
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%); 
+    color: white;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+.form-control, .form-select { 
+    border-radius: 8px; 
+} /* Rounded form elements */
