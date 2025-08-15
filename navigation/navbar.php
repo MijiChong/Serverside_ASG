@@ -197,7 +197,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo ($current_page == 'habits') ? 'active' : ''; ?>" href="habits.php">
+                    <a class="nav-link <?php echo ($current_page == 'habit') ? 'active' : ''; ?>" href="habit.php">
                         <i class="fas fa-seedling habit-icon"></i>
                         Habits
                     </a>
