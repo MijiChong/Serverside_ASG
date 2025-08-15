@@ -7,6 +7,7 @@ if (!isset($_SESSION['uid'])) {
 }
 
 require 'mysql.php';
+require_once 'setting_loader.php';
 
 $uid = $_SESSION['uid'];
 $id = $_GET['id'] ?? null;
@@ -70,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $success = "Exercise updated successfully!";
         // Redirect after save to avoid resubmission
-        header("Location: view_exercise.php?id=" . $id);
+        header("Location: exercise_view.php?id=" . $id);
         exit();
     } catch (PDOException $e) {
         $error = $e->getMessage();
@@ -93,10 +94,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Exercise CSS -->
     <link href="css/exercise.css" rel="stylesheet">
+    <link href="css/global-setting.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            /* Apply user's selected gradient */
+            <?php echo getGradientCSS(); ?>
+        }
+    </style>
 
 </head>
 
-<body>
+<body <?php echo getBodyClass(); ?>>
     <!-- Navigation Bar -->
     <?php include 'navigation/navbar.php'; ?>
     
@@ -236,7 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Save Changes
                             </button>
-                            <a href="view_exercise.php?id=<?php echo $id; ?>" class="btn btn-secondary">
+                            <a href="exercise_view.php?id=<?php echo $id; ?>" class="btn btn-secondary">
                                 <i class="fas fa-times"></i> Cancel
                             </a>
                         </div>

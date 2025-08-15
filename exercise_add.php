@@ -7,6 +7,7 @@ if (!isset($_SESSION['uid'])) {
 }
 
 require 'mysql.php';
+require_once 'setting_loader.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -53,10 +54,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Exercise CSS -->
     <link href="css/exercise.css" rel="stylesheet">
+    <link href="css/global-setting.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            /* Apply user's selected gradient */
+            <?php echo getGradientCSS(); ?>
+        }
+    </style>
 
 </head>
 
-<body>
+<body <?php echo getBodyClass(); ?>>
     <!-- Navigation Bar -->
     <?php include 'navigation/navbar.php'; ?>
     

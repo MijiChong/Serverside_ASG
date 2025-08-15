@@ -9,6 +9,7 @@ if (!isset($_SESSION['uid'])) {
 $firebase_uid = $_SESSION['uid'];
 
 require 'mysql.php';
+require_once 'setting_loader.php';
 
 try {
     $uid = $_SESSION['uid'];
@@ -67,10 +68,22 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Exercise CSS -->
     <link href="css/exercise.css" rel="stylesheet">
+    <link href="css/global-setting.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            /* Apply user's selected gradient */
+            <?php echo getGradientCSS(); ?>
+        }
+    </style>
 
 </head>
 
-<body>
+<body <?php echo getBodyClass(); ?>>
     <!-- Navigation Bar -->
     <?php include 'navigation/navbar.php'; ?>
     
@@ -85,7 +98,7 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </h1>
                         <p class="page-subtitle">Track your workouts, set goals, and monitor your fitness progress</p>
                     </div>
-                    <a href="add_exercise.php" class="btn btn-exercise">
+                    <a href="exercise_add.php" class="btn btn-exercise">
                         <i class="fas fa-plus me-2"></i>New Exercise
                     </a>
                 </div>
@@ -169,13 +182,13 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <td><?php echo htmlspecialchars(substr($exercise['notes'], 0, 50)); ?><?php echo strlen($exercise['notes']) > 50 ? '...' : ''; ?></td>
                                         <td>
                                             <div class="action-buttons">
-                                                <a href="view_exercise.php?id=<?php echo $exercise['exercise_id']; ?>" class="action-btn view-btn" title="View">
+                                                <a href="exercise_view.php?id=<?php echo $exercise['exercise_id']; ?>" class="action-btn view-btn" title="View">
                                                     <i class="fas fa-eye"></i> View
                                                 </a>
-                                                <a href="update_exercise.php?id=<?php echo $exercise['exercise_id']; ?>" class="action-btn edit-btn" title="Edit">
+                                                <a href="exercise_update.php?id=<?php echo $exercise['exercise_id']; ?>" class="action-btn edit-btn" title="Edit">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>
-                                                <a href="delete_exercise.php?id=<?php echo $exercise['exercise_id']; ?>" class="action-btn delete-btn" title="Delete"
+                                                <a href="exercise_delete.php?id=<?php echo $exercise['exercise_id']; ?>" class="action-btn delete-btn" title="Delete"
                                                 onclick="return confirm('Are you sure you want to delete this exercise record?');">
                                                     <i class="fas fa-trash"></i> Delete
                                                 </a>

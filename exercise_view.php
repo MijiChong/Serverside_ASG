@@ -7,6 +7,7 @@ if (!isset($_SESSION['uid'])) {
 }
 
 require 'mysql.php';
+require_once 'setting_loader.php';
 
 $uid = $_SESSION['uid'];
 $id = $_GET['id'] ?? null;
@@ -46,10 +47,22 @@ if (!$exercise) {
 
     <!-- Exercise CSS -->
     <link href="css/exercise.css" rel="stylesheet">
+    <link href="css/global-setting.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            /* Apply user's selected gradient */
+            <?php echo getGradientCSS(); ?>
+        }
+    </style>
 
 </head>
 
-<body>
+<body <?php echo getBodyClass(); ?>>
     <!-- Navigation Bar -->
     <?php include 'navigation/navbar.php'; ?>
     
@@ -138,10 +151,10 @@ if (!$exercise) {
                 <!-- Entry Actions -->
                 <div class="entry-view-actions">
                     <div class="action-group ms-auto">
-                        <a href="update_exercise.php?id=<?= $exercise['exercise_id'] ?>" class="action-btn edit-btn">
+                        <a href="exercise_update.php?id=<?= $exercise['exercise_id'] ?>" class="action-btn edit-btn">
                             <i class="fas fa-edit me-2"></i>Edit Record
                         </a>
-                        <a href="delete_exercise.php?id=<?= $exercise['exercise_id'] ?>" 
+                        <a href="exercise_delete.php?id=<?= $exercise['exercise_id'] ?>" 
                            class="action-btn delete-btn"
                            onclick="return confirm('Are you sure you want to delete this record? This action cannot be undone.')">
                             <i class="fas fa-trash me-2"></i>Delete Record
