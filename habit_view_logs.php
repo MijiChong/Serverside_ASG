@@ -5,6 +5,7 @@ if (!isset($_SESSION['uid'])) {
     exit();
 }
 require 'mysql.php';
+require_once 'setting_loader.php';
 
 $uid = $_SESSION['uid'];
 $habit_id = filter_var($_GET['habit_id'] ?? null, FILTER_VALIDATE_INT);
@@ -65,13 +66,27 @@ try {
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Habit Logs - <?= htmlspecialchars($habit['habit_name']) ?></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/habit_view_logs.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/habit_view_logs.css" rel="stylesheet">
+    <link href="css/global-setting.css" rel="stylesheet">
+    <!-- Navigation CSS -->
+    <link href="navigation/navbar.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            /* Apply user's selected gradient */
+            <?php echo getGradientCSS(); ?>
+        }
+    </style>
 </head>
-<body class="gradient-bg">
+<body <?php echo getBodyClass(); ?>>
     <?php include 'navigation/navbar.php'; ?>
 
     <div class="container py-5">
