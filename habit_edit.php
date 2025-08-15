@@ -5,6 +5,7 @@ if (!isset($_SESSION['uid'])) {
     exit();
 }
 require 'mysql.php';
+require_once 'setting_loader.php';
 
 $uid = $_SESSION['uid'];
 $habit_id = $_GET['habit_id'] ?? null;
@@ -44,8 +45,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/habit_1.css" rel="stylesheet"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="navigation/navbar.css" rel="stylesheet"> 
+    <link href="css/global-setting.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            /* Apply user's selected gradient */
+            <?php echo getGradientCSS(); ?>
+        }
+    </style>
 </head>
-<body>
+<body <?php echo getBodyClass(); ?>>
 <?php include 'navigation/navbar.php'; ?>
 
 <div class="container mt-5 animate-fade-in"> 
