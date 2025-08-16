@@ -2,7 +2,6 @@
 // You can add PHP logic here if needed
 session_start();
 if (!isset($_SESSION['uid'])) {
-    // Not logged in
     header('Location: login.php');
     exit;
 }
