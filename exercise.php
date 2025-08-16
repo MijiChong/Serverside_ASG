@@ -178,7 +178,7 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         </td>
                                         <td><?php echo $exercise['duration']; ?> min</td>
                                         <td><?php echo $exercise['user_weight']; ?> kg</td>
-                                        <td><?php echo $exercise['calories_burned']; ?> cal</td>
+                                        <td><?php echo $exercise['calories_burned']; ?> kcal</td>
                                         <td><?php echo htmlspecialchars(substr($exercise['notes'], 0, 50)); ?><?php echo strlen($exercise['notes']) > 50 ? '...' : ''; ?></td>
                                         <td>
                                             <div class="action-buttons">

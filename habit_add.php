@@ -5,6 +5,7 @@ if (!isset($_SESSION['uid'])) {
     exit();
 }
 require 'mysql.php';
+require_once 'setting_loader.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $uid = $_SESSION['uid'];

@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <!-- Calories -->
                             <div class="form-group" style="grid-column: 2 / span 2;">
                                 <label for="calories">
-                                    Calories Burned 
+                                    Calories Burned (kcal)
                                     <span style="font-size: 0.8rem; color: #666; font-weight: normal;">
                                         (auto-calculated, you can modify)
                                     </span>

@@ -4,8 +4,10 @@ if (!isset($_SESSION['uid'])) {
     header("Location: login.php");
     exit();
 }
+require 'mysql.php';
 require_once 'setting_loader.php';
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -14,10 +16,7 @@ require_once 'setting_loader.php';
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="css/habit_1.css" rel="stylesheet"> 
-    <link href="navigation/navbar.css" rel="stylesheet"> 
-    <link href="css/global-setting.css" rel="stylesheet">
-    
-    <style>
+     <style>
         :root {
             --primary-color: #4f46e5;
             --secondary-color: #06b6d4;
@@ -28,7 +27,7 @@ require_once 'setting_loader.php';
         }
     </style>
 </head>
-<body <?php echo getBodyClass(); ?>>
+<body>
 <?php include 'navigation/navbar.php'; ?>
 
 <div class="container mt-5 animate-fade-in"> 
@@ -66,4 +65,5 @@ require_once 'setting_loader.php';
     </div>
 </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </html>

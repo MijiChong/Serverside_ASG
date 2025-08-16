@@ -133,7 +133,7 @@ if (!$exercise) {
                                 <p><strong>Duration (min):</strong><br><?= htmlspecialchars($exercise['duration']) ?></p>
                             </div>
                             <div class="col-md-3">
-                                <p><strong>Calories Burned (cal):</strong><br><?= htmlspecialchars($exercise['calories_burned']) ?></p>
+                                <p><strong>Calories Burned (kcal):</strong><br><?= htmlspecialchars($exercise['calories_burned']) ?></p>
                             </div>
                         </div>
 
@@ -178,7 +178,7 @@ if (!$exercise) {
                     <div class="stat-item">
                         <i class="fas fa-dumbbell me-2"></i>
                         <small class="text-muted">
-                            <?= htmlspecialchars($exercise['duration']) ?> min, <?= htmlspecialchars($exercise['calories_burned']) ?> cal
+                            <?= htmlspecialchars($exercise['duration']) ?> min, <?= htmlspecialchars($exercise['calories_burned']) ?> kcal
                         </small>
                     </div>
                 </div>

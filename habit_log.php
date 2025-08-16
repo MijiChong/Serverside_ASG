@@ -6,6 +6,7 @@ if (!isset($_SESSION['uid'])) {
 }
 
 require 'mysql.php';
+require_once 'setting_loader.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $habit_id = $_POST['habit_id'];

@@ -71,7 +71,7 @@ try {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/habit_view_logs.css" />
-        <link href="navigation/navbar.css" rel="stylesheet"> 
+    <link href="navigation/navbar.css" rel="stylesheet"> 
     <link href="css/global-setting.css" rel="stylesheet">
     
     <style>
@@ -84,8 +84,10 @@ try {
             <?php echo getGradientCSS(); ?>
         }
     </style>
-</head>
+
 <body <?php echo getBodyClass(); ?>>
+</head>
+<body class="gradient-bg">
     <?php include 'navigation/navbar.php'; ?>
 
     <div class="container py-5">
@@ -244,4 +246,5 @@ try {
         </div>
     </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </html>

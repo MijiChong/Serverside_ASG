@@ -56,13 +56,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+<<<<<<< HEAD
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Log - <?= htmlspecialchars($log['habit_name']) ?></title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" >
+    <link href="css/journal.css" rel="stylesheet">
+    <link href="css/global-setting.css" rel="stylesheet">
+    <!-- Navigation CSS -->
+    <link href="navigation/navbar.css" rel="stylesheet">
+=======
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Edit Log - <?= htmlspecialchars($log['habit_name']) ?></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/journal.css" />
-    <link href="navigation/navbar.css" rel="stylesheet"> 
+        <link href="navigation/navbar.css" rel="stylesheet"> 
     <link href="css/global-setting.css" rel="stylesheet">
+>>>>>>> michi
     
     <style>
         :root {
@@ -74,8 +85,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php echo getGradientCSS(); ?>
         }
     </style>
+<<<<<<< HEAD
 </head>
 <body <?php echo getBodyClass(); ?>>
+=======
+
+<body <?php echo getBodyClass(); ?>>
+</head>
+<body>
+>>>>>>> michi
     <?php include 'navigation/navbar.php'; ?>
 
     <div class="container main-content">
@@ -146,4 +164,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </html>

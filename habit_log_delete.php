@@ -5,6 +5,7 @@ if (!isset($_SESSION['uid'])) {
     exit();
 }
 require 'mysql.php';
+require_once 'setting_loader.php';
 
 $uid = $_SESSION['uid'];
 $log_id = $_GET['log_id'] ?? null;

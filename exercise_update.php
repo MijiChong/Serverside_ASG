@@ -225,10 +225,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             <!-- Calories -->
                             <div class="form-group" style="grid-column: 1 / span 2;">
-                                <label for="calories">Calories Burned
-                                    <span style="font-size: 0.8rem; color: #666; font-weight: normal;">
+                                <label for="calories">Calories Burned (kcal)
+                                    <!-- <span style="font-size: 0.8rem; color: #666; font-weight: normal;">
                                         (Click the calculator button after making changes)
-                                    </span>
+                                    </span> -->
                                 </label>
                                 <div style="position: relative;">
                                     <input type="number" id="calories" name="calories_burned" min="0" step="0.01" value="<?php echo htmlspecialchars($exercise['calories_burned']); ?>" required>
