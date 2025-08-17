@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <select id="exercise_type" name="exercise_type" required onchange="toggleCustomExercise()">
                                     <option value="">Select Exercise</option>
                                     <option value="Jogging">🏃‍♀️ Jogging</option>
-                                    <option value="Gym">🏋️‍♀️ Gym </option>
+                                    <option value="Gym Workout">🏋️‍♀️ Gym Workout</option>
                                     <option value="Cycling">🚴‍♀️ Cycling</option>
                                     <option value="Swimming">🏊‍♀️ Swimming</option>
                                     <option value="Yoga">🧘‍♀️ Yoga</option>
@@ -126,11 +126,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <option value="Badminton">🏸 Badminton</option>
                                     <option value="Volleyball">🏐 Volleyball</option>
                                     <option value="Boxing">🥊 Boxing</option>
-                                    <option value="Martial_arts">🥋 Martial Arts</option>
+                                    <option value="Martial Arts">🥋 Martial Arts</option>
                                     <option value="Pilates">🤸‍♀️ Pilates</option>
                                     <option value="Zumba">💃 Zumba</option>
                                     <option value="Crossfit">💪 CrossFit</option>
-                                    <option value="Rock_climbing">🧗‍♀️ Rock Climbing</option>
+                                    <option value="Rock Climbing">🧗‍♀️ Rock Climbing</option>
                                     <option value="Other">❓ Other (Custom)</option>
                                 </select>
                                 

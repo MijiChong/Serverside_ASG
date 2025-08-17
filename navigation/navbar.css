@@ -1,4 +1,4 @@
-/* Enhanced Navigation Bar CSS */
+/* Enhanced Navigation Bar CSS with Avatar Gradient Support */
 :root {
     --primary-color: #4f46e5;
     --secondary-color: #06b6d4;
@@ -8,6 +8,26 @@
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --glass-effect: rgba(255, 255, 255, 0.95);
     --border-subtle: rgba(0, 0, 0, 0.08);
+}
+
+/* Avatar Gradient Classes - Matching Profile System */
+.gradient-group-1 { 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+}
+.gradient-group-2 { 
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+}
+.gradient-group-3 { 
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); 
+}
+.gradient-group-4 { 
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); 
+}
+.gradient-group-5 { 
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); 
+}
+.gradient-group-6 { 
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); 
 }
 
 /* Base Navbar Styles */
@@ -182,18 +202,21 @@
     100% { transform: scale(1); }
 }
 
-/* User Profile Section */
+/* Enhanced User Profile Section */
 .user-profile {
     display: flex;
     align-items: center;
     gap: 15px;
     padding: 5px;
+    position: relative;
 }
 
+/* Enhanced User Avatar with Gradient Support */
 .user-avatar {
     width: 45px;
     height: 45px;
     border-radius: 50%;
+    /* Default gradient - will be overridden by gradient classes */
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
     display: flex;
@@ -205,6 +228,7 @@
     cursor: pointer;
     position: relative;
     box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .user-avatar:hover {
@@ -233,6 +257,41 @@
     100% { transform: rotate(360deg); }
 }
 
+/* Avatar text styling */
+.avatar-text {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+}
+
+/* Enhanced Profile Notification Dot */
+.profile-notification-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border: 2px solid white;
+    border-radius: 50%;
+    animation: pulse-notification 2s infinite;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes pulse-notification {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    }
+    50% { 
+        opacity: 0.8; 
+        transform: scale(1.2);
+        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.6);
+    }
+}
+
 .user-info {
     display: flex;
     flex-direction: column;
@@ -244,6 +303,7 @@
     color: #64748b;
     font-weight: 500;
     margin: 0;
+    line-height: 1.2;
 }
 
 .user-name {
@@ -255,6 +315,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: 1.2;
 }
 
 /* Enhanced Dropdown */
@@ -292,6 +353,18 @@
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     min-width: 220px;
+    animation: dropdownFadeIn 0.3s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .dropdown-item {
@@ -305,12 +378,19 @@
     color: #374151;
     text-decoration: none;
     margin-bottom: 4px;
+    position: relative;
 }
 
 .dropdown-item:hover {
     background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(79, 70, 229, 0.05));
     color: var(--primary-color);
     transform: translateX(5px);
+}
+
+.dropdown-item.active {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(79, 70, 229, 0.08));
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 .dropdown-item i {
@@ -325,310 +405,22 @@
 }
 
 /* Special styling for logout item */
-.dropdown-item:last-child {
+.dropdown-item.logout-item {
     color: #ef4444;
     margin-top: 8px;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
     padding-top: 16px;
 }
 
-.dropdown-item:last-child:hover {
+.dropdown-item.logout-item:hover {
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
     color: #dc2626;
 }
 
-/* Mobile Navbar Enhancements */
-.navbar-toggler {
-    border: none;
-    padding: 8px 10px;
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(79, 70, 229, 0.05));
-    border-radius: 12px;
-    transition: var(--transition);
-}
-
-.navbar-toggler:hover {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(79, 70, 229, 0.08));
-    transform: scale(1.05);
-}
-
-.navbar-toggler:focus {
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-}
-
-.navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%234f46e5' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2.5' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    transition: var(--transition);
-}
-
-/* Loading Animation for Page Transitions */
-.page-loading {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
-    transform: translateX(-100%);
-    animation: loading-bar 2s ease-in-out infinite;
-    z-index: 9999;
-}
-
-@keyframes loading-bar {
-    0%, 100% { transform: translateX(-100%); }
-    50% { transform: translateX(100%); }
-}
-
-/* Interactive States */
-.nav-link:active {
-    transform: scale(0.95);
-}
-
-.user-avatar:active {
-    transform: scale(0.95);
-}
-
-.dropdown-item:active {
-    transform: scale(0.98) translateX(3px);
-}
-
-/* Focus States for Accessibility */
-.nav-link:focus,
-.dropdown-item:focus,
-.user-avatar:focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
-/* Smooth Transitions */
-* {
-    transition: var(--transition);
-}
-
-/* Mobile Responsive Design */
-@media (max-width: 991px) {
-    .navbar-nav {
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 1px solid var(--border-subtle);
-        gap: 8px;
-    }
-    
-    .nav-link {
-        padding: 15px 20px !important;
-        border-radius: 15px;
-        margin: 2px 0;
-    }
-    
-    .user-profile {
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 1px solid var(--border-subtle);
-        justify-content: center;
-    }
-
-    .user-info {
-        align-items: center;
-        text-align: center;
-    }
-
-    .user-name {
-        max-width: none;
-    }
-
-    .nav-link.active::after {
-        display: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .navbar {
-        min-height: 60px;
-    }
-    
-    .navbar-brand {
-        font-size: 1.5rem;
-    }
-    
-    .navbar-brand i {
-        font-size: 1.7rem;
-        margin-right: 10px;
-    }
-    
-    .user-avatar {
-        width: 42px;
-        height: 42px;
-        font-size: 1.1rem;
-    }
-    
-    .dropdown-menu {
-        min-width: 200px;
-    }
-}
-
-@media (max-width: 576px) {
-    .navbar {
-        padding: 8px 0;
-        min-height: 55px;
-    }
-    
-    .navbar-brand {
-        font-size: 1.4rem;
-    }
-    
-    .navbar-brand i {
-        font-size: 1.6rem;
-        margin-right: 8px;
-    }
-    
-    .user-avatar {
-        width: 38px;
-        height: 38px;
-        font-size: 1rem;
-    }
-    
-    .nav-link {
-        font-size: 0.9rem;
-    }
-    
-    .dropdown-menu {
-        min-width: 180px;
-        padding: 12px 6px;
-    }
-    
-    .dropdown-item {
-        padding: 10px 15px;
-        font-size: 0.9rem;
-    }
-}
-
-/* High Contrast Mode Support */
-@media (prefers-contrast: high) {
-    .navbar {
-        border-bottom: 2px solid #000;
-    }
-    
-    .nav-link:hover,
-    .nav-link.active {
-        background: #000;
-        color: #fff !important;
-    }
-    
-    .dropdown-item:hover {
-        background: #000;
-        color: #fff;
-    }
-}
-
-/* Reduced Motion Support */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        transition: none !important;
-        animation: none !important;
-    }
-    
-    .nav-link:hover,
-    .user-avatar:hover,
-    .navbar-brand:hover {
-        transform: none !important;
-    }
-}
-
-/* Dark Mode Support (if implemented) */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --glass-effect: rgba(17, 24, 39, 0.95);
-        --border-subtle: rgba(255, 255, 255, 0.1);
-    }
-    
-    .navbar {
-        background: var(--glass-effect);
-        border-bottom-color: var(--border-subtle);
-    }
-    
-    .nav-link {
-        color: #d1d5db !important;
-    }
-    
-    .nav-link:hover,
-    .nav-link.active {
-        color: var(--primary-color) !important;
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(79, 70, 229, 0.1));
-    }
-    
-    .dropdown-menu {
-        background: rgba(17, 24, 39, 0.95);
-    }
-    
-    .dropdown-item {
-        color: #d1d5db;
-    }
-    
-    .dropdown-item:hover {
-        color: var(--primary-color);
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(79, 70, 229, 0.1));
-    }
-    
-    .user-name {
-        color: #f9fafb;
-    }
-    
-    .user-greeting {
-        color: #9ca3af;
-    }
-}
-
-/* Print Styles */
-@media print {
-    .navbar {
-        display: none !important;
-    }
-}
-
-/* Custom Utilities */
-.nav-text-gradient {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.nav-shadow-sm {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.nav-shadow-md {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.nav-shadow-lg {
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Animation Classes */
-.fade-in {
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-.slide-in {
-    animation: slideIn 0.3s ease-in-out;
-}
-
-.bounce-in {
-    animation: bounceIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideIn {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes bounceIn {
-    0% { transform: scale(0.8); opacity: 0; }
-    50% { transform: scale(1.1); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 1; }
+/* Profile notification badge in dropdown */
+.dropdown-item .badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 600;
 }

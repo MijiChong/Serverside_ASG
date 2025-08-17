@@ -490,9 +490,9 @@ if (isset($_SESSION['uid'])) {
                     <a class="nav-link enhanced-nav-link <?php echo ($current_page == 'dashboard') ? 'active' : ''; ?>" href="dashboard.php">
                         <i class="fas fa-tachometer-alt nav-icon dashboard-icon"></i>
                         <span>Dashboard</span>
-                        <?php if($notification_count > 0 && $current_page == 'dashboard'): ?>
+                        <!-- <?php if($notification_count > 0 && $current_page == 'dashboard'): ?>
                             <span class="notification-badge"><?php echo $notification_count; ?></span>
-                        <?php endif; ?>
+                        <?php endif; ?> -->
                     </a>
                 </li>
                 <li class="nav-item enhanced-nav-item">
@@ -660,17 +660,6 @@ function updateNotificationBadge() {
     }
 }
 
-// Show user statistics modal
-function showStats() {
-    // You can implement a modal or redirect to a stats page
-    alert('Statistics feature coming soon! This will show your weekly/monthly progress.');
-}
-
-// Show help modal
-function showHelp() {
-    // You can implement a help modal or redirect to a help page
-    alert('Help & Tips:\n\n• Use Alt+1-5 for quick navigation\n• Track daily for best insights\n• Set goals in each module\n• Check your progress regularly');
-}
 
 // Add smooth transitions when navigating
 window.addEventListener('beforeunload', function() {

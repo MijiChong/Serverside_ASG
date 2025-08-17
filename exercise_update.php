@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <?php
                                     $types = [
                                         "Jogging" => "🏃‍♀️ Jogging",
-                                        "Gym" => "🏋️‍♀️ Gym ",
+                                        "Gym Workout" => "🏋️‍♀️ Gym Workout",
                                         "Cycling" => "🚴‍♀️ Cycling",
                                         "Swimming" => "🏊‍♀️ Swimming",
                                         "Yoga" => "🧘‍♀️ Yoga",
@@ -166,11 +166,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         "Badminton" => "🏸 Badminton",
                                         "Volleyball" => "🏐 Volleyball",
                                         "Boxing" => "🥊 Boxing",
-                                        "Martial_arts" => "🥋 Martial Arts",
+                                        "Martial Arts" => "🥋 Martial Arts",
                                         "Pilates" => "🤸‍♀️ Pilates",
                                         "Zumba" => "💃 Zumba",
                                         "Crossfit" => "💪 CrossFit",
-                                        "Rock_climbing" => "🧗‍♀️ Rock Climbing",
+                                        "Rock Climbing" => "🧗‍♀️ Rock Climbing",
                                         "Other" => "❓ Other (Custom)"
                                     ];
                                     foreach ($types as $value => $label) {
