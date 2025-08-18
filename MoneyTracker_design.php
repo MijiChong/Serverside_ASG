@@ -95,7 +95,7 @@ require_once 'setting_loader.php';
                 <div class="card balance-card">
                     <div class="card-body text-center">
                         <h3>Current Balance</h3>
-                        <h2>$<?php echo number_format((float)$balance, 2); ?></h2>
+                        <h2>RM <?php echo number_format((float)$balance, 2); ?></h2>
                     </div>
                 </div>
             </div>
@@ -105,7 +105,7 @@ require_once 'setting_loader.php';
                 <div class="card stat-card">
                     <div class="card-body text-center">
                         <h5>Total Income</h5>
-                        <h3 class="text-success">$<?php echo number_format((float)$balance_data['total_income'], 2); ?></h3>
+                        <h3 class="text-success">RM <?php echo number_format((float)$balance_data['total_income'], 2); ?></h3>
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@ require_once 'setting_loader.php';
                 <div class="card stat-card">
                     <div class="card-body text-center">
                         <h5>Total Expenses</h5>
-                        <h3 class="text-danger">$<?php echo number_format((float)$balance_data['total_expense'], 2); ?></h3>
+                        <h3 class="text-danger">RM <?php echo number_format((float)$balance_data['total_expense'], 2); ?></h3>
                     </div>
                 </div>
             </div>
@@ -238,10 +238,10 @@ require_once 'setting_loader.php';
                                         </div>
                                         <div class="text-end">
                                             <?php if ($report['income'] > 0): ?>
-                                                <small class="text-success">Inc: $<?php echo number_format($report['income'], 2); ?></small><br>
+                                                <small class="text-success">Inc: RM <?php echo number_format($report['income'], 2); ?></small><br>
                                             <?php endif; ?>
                                             <?php if ($report['expense'] > 0): ?>
-                                                <small class="text-danger">Exp: $<?php echo number_format($report['expense'], 2); ?></small>
+                                                <small class="text-danger">Exp: RM <?php echo number_format($report['expense'], 2); ?></small>
                                             <?php endif; ?> 
                                         </div>
                                     </li>
@@ -249,13 +249,13 @@ require_once 'setting_loader.php';
                             </ul>
                             <hr>
                             <div class="d-flex justify-content-between fw-bold">
-                                <span>Total Income:</span> <span class="text-success">$<?php echo number_format($total_month_income, 2); ?></span>
+                                <span>Total Income:</span> <span class="text-success">RM <?php echo number_format($total_month_income, 2); ?></span>
                             </div>
                             <div class="d-flex justify-content-between fw-bold">
-                                <span>Total Expense:</span> <span class="text-danger">$<?php echo number_format($total_month_expense, 2); ?></span>
+                                <span>Total Expense:</span> <span class="text-danger">RM <?php echo number_format($total_month_expense, 2); ?></span>
                             </div>
                             <div class="d-flex justify-content-between fw-bold mt-2">
-                                <span>Net Balance:</span> <span class="<?php echo ($total_month_income - $total_month_expense >= 0 ? 'text-success' : 'text-danger'); ?>">$<?php echo number_format($total_month_income - $total_month_expense, 2); ?></span>
+                                <span>Net Balance:</span> <span class="<?php echo ($total_month_income - $total_month_expense >= 0 ? 'text-success' : 'text-danger'); ?>">RM <?php echo number_format($total_month_income - $total_month_expense, 2); ?></span>
                             </div>
                         <?php else: ?>
                             <p class="text-center text-muted py-3">No monthly data available for <?php echo $months[$filter_month] . ' ' . $filter_year; ?> in <?php echo $current_cashbook_name; ?>.</p>
