@@ -156,13 +156,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Set today's date as default
     document.getElementById('exercise_date').valueAsDate = new Date();
-
-    // Clear form
-    function clearForm() {
-        document.querySelector('#add-exercise form').reset();
-        // document.getElementById('exercise_date').value = '<?php echo date("Y-m-d"); ?>';
-        toggleCustomExercise();
-    }
-    updateCaloriesField(); // Run once right away
+    updateCaloriesField();
+ // Run once right away
 });
+
+ // Clear form
+function clearForm() {
+    document.querySelector('#add-exercise form').reset();
+    // document.getElementById('exercise_date').value = '<?php echo date("Y-m-d"); ?>';
+    toggleCustomExercise();
+}
 

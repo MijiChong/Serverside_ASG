@@ -123,7 +123,7 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <i class="fas fa-dumbbell"></i>
                             <h3 style="color: #666;">No exercises recorded yet</h3>
                             <p style="color: #999;">Start by adding your first workout!</p>
-                            <a href="add_exercise.php" class="btn btn-exercise">
+                            <a href="exercise_add.php" class="btn btn-exercise">
                                 <i class="fas fa-plus me-2"></i>Create First Records
                             </a>
                         </div>
