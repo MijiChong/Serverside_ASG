@@ -141,43 +141,6 @@ try {
     });
     $recentActivities = array_slice($recentActivities, 0, 8); // Show more recent activities
     
-    // === ANALYTICS DATA ===
-    // Weekly mood trend
-    $stmt = $pdo->prepare("
-        SELECT DATE(entry_date) as date, mood, COUNT(*) as count 
-        FROM journal_entries 
-        WHERE firebase_uid = ? AND entry_date >= ? 
-        GROUP BY DATE(entry_date), mood
-        ORDER BY entry_date DESC
-    ");
-    $stmt->execute([$uid, $weekAgo]);
-    $weeklyMoodData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Exercise intensity over time
-    $stmt = $pdo->prepare("
-        SELECT DATE(exercise_date) as date, AVG(calories_burned/duration) as intensity
-        FROM exercise_records 
-        WHERE firebase_uid = ? AND exercise_date >= ? AND duration > 0
-        GROUP BY DATE(exercise_date)
-        ORDER BY exercise_date DESC
-    ");
-    $stmt->execute([$uid, $weekAgo]);
-    $exerciseIntensity = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Top spending categories this month
-    $stmt = $pdo->prepare("
-        SELECT c.category_name, c.color, SUM(t.amount) as total, COUNT(*) as transactions
-        FROM transactions t
-        JOIN categories c ON t.category_id = c.category_id
-        WHERE t.firebase_uid = ? AND t.transaction_type = 'expense' 
-        AND DATE_FORMAT(t.transaction_date, '%Y-%m') = ?
-        GROUP BY c.category_id, c.category_name, c.color
-        ORDER BY total DESC
-        LIMIT 6
-    ");
-    $stmt->execute([$uid, $currentMonth]);
-    $topCategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
     // === INSIGHTS AND RECOMMENDATIONS ===
     $insights = [];
     
@@ -212,7 +175,6 @@ try {
     $habitCompletionRate = 0;
     $monthlyFinance = ['total_income' => 0, 'total_expenses' => 0];
     $recentActivities = [];
-    $topCategories = [];
     $exerciseStreak = $journalStreak = 0;
     $exerciseGoalProgress = $savingsProgress = 0;
     $insights = [];
@@ -226,7 +188,6 @@ try {
     <title>MyTrackDiary - Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     
     <!-- Navigation CSS -->
     <link href="navigation/navbar.css" rel="stylesheet">
@@ -247,298 +208,388 @@ try {
 </head>
 <body <?php echo getBodyClass(); ?>>
     
-
     <!-- Navigation Bar -->
     <?php include 'navigation/navbar.php'; ?>
 
-    <!-- Main Content -->
+    <!-- Main Content Container -->
     <div class="main-content">
-        <div class="container">
-            <!-- Enhanced Welcome Section -->
+        <div class="container-fluid px-4">
+            
+            <!-- Header Section with Welcome -->
             <?php date_default_timezone_set('Asia/Kuala_Lumpur'); ?>
-            <div class="welcome-section enhanced-welcome animate-fade-in">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <div class="welcome-content">
-                            <h1 class="welcome-title">
-                                Good <?php echo date('H') < 12 ? 'Morning' : (date('H') < 18 ? 'Afternoon' : 'Evening'); ?>! 👋
-                            </h1>
-                            <p class="welcome-subtitle">
-                                Ready to crush your goals today? Here's your personalized dashboard with real-time insights.
-                            </p>
-                            <div class="streak-indicators">
-                                <div class="streak-item">
-                                    <i class="fas fa-fire exercise-color"></i>
-                                    <span><?php echo $exerciseStreak; ?> day exercise streak</span>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="welcome-section enhanced-welcome animate-fade-in">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8 col-xl-9">
+                                <div class="welcome-content">
+                                    <h1 class="welcome-title">
+                                        Good <?php echo date('H') < 12 ? 'Morning' : (date('H') < 18 ? 'Afternoon' : 'Evening'); ?>! 👋
+                                    </h1>
+                                    <p class="welcome-subtitle">
+                                        Ready to crush your goals today? Here's your personalized dashboard with real-time insights.
+                                    </p>
+                                    <div class="streak-indicators">
+                                        <div class="streak-item">
+                                            <i class="fas fa-fire exercise-color"></i>
+                                            <span><?php echo $exerciseStreak; ?> day exercise streak</span>
+                                        </div>
+                                        <div class="streak-item">
+                                            <i class="fas fa-pen-fancy journal-color"></i>
+                                            <span><?php echo $journalStreak; ?> day journal streak</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="streak-item">
-                                    <i class="fas fa-pen-fancy journal-color"></i>
-                                    <span><?php echo $journalStreak; ?> day journal streak</span>
+                            </div>
+                            <div class="col-lg-4 col-xl-3">
+                                <div class="date-weather-widget">
+                                    <div class="today-date">
+                                        <i class="fas fa-calendar-day me-2"></i>
+                                        <?php echo date('l, F j, Y'); ?>
+                                    </div>
+                                    <div class="current-time" id="currentTime">
+                                        <?php echo date('h:i A'); ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 text-end">
-                        <div class="date-weather-widget">
-                            <div class="today-date">
-                                <i class="fas fa-calendar-day me-2"></i>
-                                <?php echo date('l, F j, Y'); ?>
+                </div>
+            </div>
+
+            <!-- Top Stats Row -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                    <div class="stat-card exercise-stat enhanced-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number"><?php echo $todayExercise['count'] ?: 0; ?></div>
+                            <div class="stat-label">Workouts Today</div>
+                            <div class="stat-detail">
+                                <?php if($todayExercise['total_duration']): ?>
+                                    <?php echo $todayExercise['total_duration']; ?> min • <?php echo $todayExercise['total_calories']; ?> cal
+                                <?php else: ?>
+                                    Ready to start?
+                                <?php endif; ?>
                             </div>
-                            <div class="current-time" id="currentTime">
-                                <?php echo date('h:i A'); ?>
+                        </div>
+                        <div class="progress-ring">
+                            <div class="progress-circle" data-progress="<?php echo $exerciseGoalProgress; ?>"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                    <div class="stat-card journal-stat enhanced-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-icon">
+                            <i class="fas fa-journal-whills"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number"><?php echo $todayJournal['count'] ?: 0; ?></div>
+                            <div class="stat-label">Journal Entries</div>
+                            <div class="stat-detail">
+                                <?php echo $journalStreak; ?> day streak 🔥
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Enhanced Stats Cards with Animations -->
-                <div class="row stats-row">
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="stat-card exercise-stat enhanced-card" data-aos="fade-up" data-aos-delay="100">
-                            <div class="stat-icon">
-                                <i class="fas fa-dumbbell"></i>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-number"><?php echo $todayExercise['count'] ?: 0; ?></div>
-                                <div class="stat-label">Workouts Today</div>
-                                <div class="stat-detail">
-                                    <?php if($todayExercise['total_duration']): ?>
-                                        <?php echo $todayExercise['total_duration']; ?> min • <?php echo $todayExercise['total_calories']; ?> cal
-                                    <?php else: ?>
-                                        Ready to start?
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <div class="progress-ring">
-                                <div class="progress-circle" data-progress="<?php echo $exerciseGoalProgress; ?>"></div>
+                <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                    <div class="stat-card transaction-stat enhanced-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number">$<?php echo number_format($todayFinance['expenses'] ?: 0, 2); ?></div>
+                            <div class="stat-label">Today's Spending</div>
+                            <div class="stat-detail">
+                                <?php if($todayFinance['income']): ?>
+                                    +$<?php echo number_format($todayFinance['income'], 2); ?> earned
+                                <?php else: ?>
+                                    No income today
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="stat-card journal-stat enhanced-card" data-aos="fade-up" data-aos-delay="200">
-                            <div class="stat-icon">
-                                <i class="fas fa-journal-whills"></i>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-number"><?php echo $todayJournal['count'] ?: 0; ?></div>
-                                <div class="stat-label">Journal Entries</div>
-                                <div class="stat-detail">
-                                    <?php echo $journalStreak; ?> day streak 🔥
-                                </div>
-                            </div>
+                </div>
+                
+                <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                    <div class="stat-card habit-stat enhanced-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
                         </div>
-                    </div>
-                    
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="stat-card transaction-stat enhanced-card" data-aos="fade-up" data-aos-delay="300">
-                            <div class="stat-icon">
-                                <i class="fas fa-wallet"></i>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-number">$<?php echo number_format($todayFinance['expenses'] ?: 0, 2); ?></div>
-                                <div class="stat-label">Today's Spending</div>
-                                <div class="stat-detail">
-                                    <?php if($todayFinance['income']): ?>
-                                        +$<?php echo number_format($todayFinance['income'], 2); ?> earned
-                                    <?php else: ?>
-                                        No income today
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+                        <div class="stat-content">
+                            <div class="stat-number"><?php echo $todayHabits['count'] ?: 0; ?></div>
+                            <div class="stat-label">Habits Done</div>
+                            <div class="stat-detail"><?php echo $habitCompletionRate; ?>% weekly average</div>
                         </div>
-                    </div>
-                    
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="stat-card habit-stat enhanced-card" data-aos="fade-up" data-aos-delay="400">
-                            <div class="stat-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-number"><?php echo $todayHabits['count'] ?: 0; ?></div>
-                                <div class="stat-label">Habits Done</div>
-                                <div class="stat-detail"><?php echo $habitCompletionRate; ?>% weekly average</div>
-                            </div>
-                            <div class="habit-progress">
-                                <div class="progress-bar" data-width="<?php echo $habitCompletionRate; ?>%"></div>
-                            </div>
+                        <div class="habit-progress">
+                            <div class="progress-bar" data-width="<?php echo $habitCompletionRate; ?>%"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Enhanced Module Cards -->
-            <div class="modules-section">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 mb-4">
-                        <div class="module-card exercise-card enhanced-module animate-fade-in">
-                            <div class="module-header">
-                                <i class="fas fa-dumbbell module-icon"></i>
-                                <div class="module-badge">
-                                    <?php echo $weeklyExercise['sessions']; ?> this week
-                                </div>
-                            </div>
-                            <h3 class="module-title">Exercise Tracker</h3>
-                            <p class="module-description">
-                                Track workouts, monitor calories, and achieve your fitness goals with detailed analytics.
-                            </p>
-                            
-                            <div class="module-stats">
-                                <div class="stats-grid">
-                                    <div class="stat-item">
-                                        <span class="stat-value"><?php echo $weeklyExercise['total_minutes'] ?: 0; ?></span>
-                                        <span class="stat-label">Minutes</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-value"><?php echo round($weeklyExercise['avg_calories'] ?: 0); ?></span>
-                                        <span class="stat-label">Avg Calories</span>
+            <!-- Main Content Grid -->
+            <div class="row">
+                <!-- Left Column - Module Cards Only -->
+                <div class="col-xl-8 col-lg-7">
+
+                    <!-- Module Cards Grid -->
+                    <div class="row mb-4">
+                        <div class="col-lg-6 mb-4">
+                            <div class="module-card exercise-card enhanced-module animate-fade-in">
+                                <div class="module-header">
+                                    <i class="fas fa-dumbbell module-icon"></i>
+                                    <div class="module-badge">
+                                        <?php echo $weeklyExercise['sessions']; ?> this week
                                     </div>
                                 </div>
+                                <h3 class="module-title">Exercise Tracker</h3>
+                                <p class="module-description">
+                                    Track workouts, monitor calories, and achieve your fitness goals with detailed analytics.
+                                </p>
+                                
+                                <div class="module-stats">
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <span class="stat-value"><?php echo $weeklyExercise['total_minutes'] ?: 0; ?></span>
+                                            <span class="stat-label">Minutes</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value"><?php echo round($weeklyExercise['avg_calories'] ?: 0); ?></span>
+                                            <span class="stat-label">Avg Calories</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="module-actions">
+                                    <a href="exercise_add.php" class="module-btn primary-btn">
+                                        <i class="fas fa-play me-2"></i>Start Workout
+                                    </a>
+                                    <a href="exercise.php?view=history" class="module-btn secondary-btn">
+                                        <i class="fas fa-history me-2"></i>View Histories
+                                    </a>
+                                </div>
                             </div>
-                            
-                            <div class="module-actions">
-                                <a href="exercise.php" class="module-btn primary-btn">
-                                    <i class="fas fa-play me-2"></i>Start Workout
-                                </a>
-                                <a href="exercise.php?view=history" class="module-btn secondary-btn">
-                                    <i class="fas fa-history me-2"></i>View History
-                                </a>
+                        </div>
+
+                        <div class="col-lg-6 mb-4">
+                            <div class="module-card journal-card enhanced-module animate-fade-in">
+                                <div class="module-header">
+                                    <i class="fas fa-journal-whills module-icon"></i>
+                                    <div class="module-badge">
+                                        <?php echo $journalStreak; ?> day streak
+                                    </div>
+                                </div>
+                                <h3 class="module-title">Daily Journal</h3>
+                                <p class="module-description">
+                                    Reflect on your thoughts, track moods, and monitor your personal growth journey.
+                                </p>
+                                
+                                <div class="module-stats">
+                                    <div class="mood-overview">
+                                        <span class="dominant-mood">Personal reflection space</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="module-actions">
+                                    <a href="journal_create.php" class="module-btn primary-btn">
+                                        <i class="fas fa-pen me-2"></i>Write Entry
+                                    </a>
+                                    <a href="journal_log.php?view=entries" class="module-btn secondary-btn">
+                                        <i class="fas fa-book-open me-2"></i>View Entries
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 mb-4">
+                            <div class="module-card transaction-card enhanced-module animate-fade-in">
+                                <div class="module-header">
+                                    <i class="fas fa-wallet module-icon"></i>
+                                    <div class="module-badge <?php echo $actualSavings >= 0 ? 'positive' : 'negative'; ?>">
+                                        <?php echo $actualSavings >= 0 ? '+' : ''; ?>$<?php echo number_format($actualSavings, 0); ?>
+                                    </div>
+                                </div>
+                                <h3 class="module-title">Financial Tracker</h3>
+                                <p class="module-description">
+                                    Manage expenses, track income, and maintain healthy financial habits with smart insights.
+                                </p>
+                                
+                                <div class="module-stats">
+                                    <div class="financial-summary">
+                                        <div class="summary-item income">
+                                            <span class="summary-label">Monthly Income</span>
+                                            <span class="summary-value">+$<?php echo number_format($monthlyFinance['total_income'] ?: 0, 0); ?></span>
+                                        </div>
+                                        <div class="summary-item expenses">
+                                            <span class="summary-label">Monthly Expenses</span>
+                                            <span class="summary-value">-$<?php echo number_format($monthlyFinance['total_expenses'] ?: 0, 0); ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="module-actions">
+                                    <a href="MoneyTracker_design.php" class="module-btn primary-btn">
+                                        <i class="fas fa-plus me-2"></i>Add Transaction
+                                    </a>
+                                    <a href="MoneyTracker_design.php?view=reports" class="module-btn secondary-btn">
+                                        <i class="fas fa-chart-pie me-2"></i>View Reports
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 mb-4">
+                            <div class="module-card habit-card enhanced-module animate-fade-in">
+                                <div class="module-header">
+                                    <i class="fas fa-seedling module-icon"></i>
+                                    <div class="module-badge">
+                                        <?php echo $habitCompletionRate; ?>% rate
+                                    </div>
+                                </div>
+                                <h3 class="module-title">Habit Builder</h3>
+                                <p class="module-description">
+                                    Build positive habits, track consistency, and develop lasting routines for success.
+                                </p>
+                                
+                                <div class="module-stats">
+                                    <div class="habit-progress-ring">
+                                        <svg class="progress-ring" width="80" height="80">
+                                            <circle class="progress-ring__circle" stroke="#e5e7eb" stroke-width="4" fill="transparent" r="36" cx="40" cy="40"/>
+                                            <circle class="progress-ring__progress" stroke="#f59e0b" stroke-width="4" fill="transparent" r="36" cx="40" cy="40" 
+                                                    style="stroke-dasharray: 226.19; stroke-dashoffset: <?php echo 226.19 - (226.19 * $habitCompletionRate / 100); ?>;"/>
+                                        </svg>
+                                        <div class="progress-text">
+                                            <span class="progress-percentage"><?php echo $habitCompletionRate; ?>%</span>
+                                            <span class="progress-label">Weekly</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="module-actions">
+                                    <a href="habit_add_form.php?action=add" class="module-btn primary-btn">
+                                        <i class="fas fa-tasks me-2"></i>Add Habit
+                                    </a>
+                                    <a href="habit.php" class="module-btn secondary-btn">
+                                        <i class="fas fa-plus me-2"></i>View Habits
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-lg-6 col-md-6 mb-4">
-                        <div class="module-card journal-card enhanced-module animate-fade-in">
-                            <div class="module-header">
-                                <i class="fas fa-journal-whills module-icon"></i>
-                                <div class="module-badge">
-                                    <?php echo $journalStreak; ?> day streak
-                                </div>
-                            </div>
-                            <h3 class="module-title">Daily Journal</h3>
-                            <p class="module-description">
-                                Reflect on your thoughts, track moods, and monitor your personal growth journey.
-                            </p>
-                            
-                            <?php if(!empty($weeklyMoodData)): ?>
-                            <div class="module-stats">
-                                <div class="mood-overview">
-                                    <?php 
-                                    $moodCounts = [];
-                                    foreach($weeklyMoodData as $mood) {
-                                        $moodCounts[$mood['mood']] = ($moodCounts[$mood['mood']] ?? 0) + $mood['count'];
-                                    }
-                                    arsort($moodCounts);
-                                    $topMood = array_key_first($moodCounts);
-                                    ?>
-                                    <span class="dominant-mood">Most frequent: <strong><?php echo ucfirst($topMood); ?></strong></span>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                            
-                            <div class="module-actions">
-                                <a href="journal_log.php" class="module-btn primary-btn">
-                                    <i class="fas fa-pen me-2"></i>Write Entry
-                                </a>
-                                <a href="journal_log.php?view=entries" class="module-btn secondary-btn">
-                                    <i class="fas fa-book-open me-2"></i>View Entries
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 col-md-6 mb-4">
-                        <div class="module-card transaction-card enhanced-module animate-fade-in">
-                            <div class="module-header">
-                                <i class="fas fa-wallet module-icon"></i>
-                                <div class="module-badge <?php echo $actualSavings >= 0 ? 'positive' : 'negative'; ?>">
-                                    <?php echo $actualSavings >= 0 ? '+' : ''; ?>$<?php echo number_format($actualSavings, 0); ?>
-                                </div>
-                            </div>
-                            <h3 class="module-title">Financial Tracker</h3>
-                            <p class="module-description">
-                                Manage expenses, track income, and maintain healthy financial habits with smart insights.
-                            </p>
-                            
-                            <div class="module-stats">
-                                <div class="financial-summary">
-                                    <div class="summary-item income">
-                                        <span class="summary-label">Monthly Income</span>
-                                        <span class="summary-value">+$<?php echo number_format($monthlyFinance['total_income'] ?: 0, 0); ?></span>
-                                    </div>
-                                    <div class="summary-item expenses">
-                                        <span class="summary-label">Monthly Expenses</span>
-                                        <span class="summary-value">-$<?php echo number_format($monthlyFinance['total_expenses'] ?: 0, 0); ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="module-actions">
-                                <a href="MoneyTracker_design.php" class="module-btn primary-btn">
-                                    <i class="fas fa-plus me-2"></i>Add Transaction
-                                </a>
-                                <a href="MoneyTracker_design.php?view=reports" class="module-btn secondary-btn">
-                                    <i class="fas fa-chart-pie me-2"></i>View Reports
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 col-md-6 mb-4">
-                        <div class="module-card habit-card enhanced-module animate-fade-in">
-                            <div class="module-header">
-                                <i class="fas fa-seedling module-icon"></i>
-                                <div class="module-badge">
-                                    <?php echo $habitCompletionRate; ?>% rate
-                                </div>
-                            </div>
-                            <h3 class="module-title">Habit Builder</h3>
-                            <p class="module-description">
-                                Build positive habits, track consistency, and develop lasting routines for success.
-                            </p>
-                            
-                            <div class="module-stats">
-                                <div class="habit-progress-ring">
-                                    <svg class="progress-ring" width="80" height="80">
-                                        <circle class="progress-ring__circle" stroke="#e5e7eb" stroke-width="4" fill="transparent" r="36" cx="40" cy="40"/>
-                                        <circle class="progress-ring__progress" stroke="#f59e0b" stroke-width="4" fill="transparent" r="36" cx="40" cy="40" 
-                                                style="stroke-dasharray: 226.19; stroke-dashoffset: <?php echo 226.19 - (226.19 * $habitCompletionRate / 100); ?>;"/>
-                                    </svg>
-                                    <div class="progress-text">
-                                        <span class="progress-percentage"><?php echo $habitCompletionRate; ?>%</span>
-                                        <span class="progress-label">Weekly</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="module-actions">
-                                <a href="habit.php" class="module-btn primary-btn">
-                                    <i class="fas fa-tasks me-2"></i>View Habits
-                                </a>
-                                <a href="habit.php?action=add" class="module-btn secondary-btn">
-                                    <i class="fas fa-plus me-2"></i>Add Habit
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
 
-            <!-- Quick Actions Floating Panel -->
-            <div class="quick-actions animate-fade-in">
-                <h3><i class="fas fa-bolt me-2"></i>Quick Actions</h3>
-                <a href="exercise.php" class="quick-btn">
-                    <i class="fas fa-dumbbell me-1"></i>Log Exercise
-                </a>
-                <a href="journal_log.php" class="quick-btn">
-                    <i class="fas fa-book me-1"></i>New Journal Entry
-                </a>
-                <a href="MoneyTracker_design.php" class="quick-btn">
-                    <i class="fas fa-wallet me-1"></i>Add Transaction
-                </a>
-                <a href="habit.php" class="quick-btn">
-                    <i class="fas fa-check me-1"></i>Check Habits
-                </a>
+                <!-- Right Column - Activity Feed and Quick Actions -->
+                <div class="col-xl-4 col-lg-5">
+                    
+                    <!-- Recent Activities -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="activity-feed enhanced-activity">
+                                <h5 class="card-title">
+                                    <span><i class="fas fa-clock me-2"></i>Recent Activities</span>
+                                    <span class="activity-count"><?php echo count($recentActivities); ?></span>
+                                </h5>
+                                
+                                <div class="activity-list">
+                                    <?php if(!empty($recentActivities)): ?>
+                                        <?php foreach($recentActivities as $activity): ?>
+                                        <div class="activity-item enhanced-activity-item">
+                                            <div class="activity-icon" style="background: 
+                                                <?php 
+                                                switch($activity['type']) {
+                                                    case 'exercise': echo 'var(--exercise-color)'; break;
+                                                    case 'journal': echo 'var(--journal-color)'; break;
+                                                    case 'transaction': echo 'var(--transaction-color)'; break;
+                                                    default: echo 'var(--primary-color)';
+                                                }
+                                                ?>">
+                                                <i class="fas fa-<?php 
+                                                    switch($activity['type']) {
+                                                        case 'exercise': echo 'dumbbell'; break;
+                                                        case 'journal': echo 'journal-whills'; break;
+                                                        case 'transaction': echo 'wallet'; break;
+                                                        default: echo 'circle';
+                                                    }
+                                                ?>"></i>
+                                            </div>
+                                            <div class="activity-content">
+                                                <div class="activity-header">
+                                                    <div class="activity-text">
+                                                        <?php
+                                                        switch($activity['type']) {
+                                                            case 'exercise':
+                                                                echo ucfirst($activity['exercise_type']) . " workout";
+                                                                break;
+                                                            case 'journal':
+                                                                echo "Journal entry - " . ucfirst($activity['mood']);
+                                                                break;
+                                                            case 'transaction':
+                                                                echo ucfirst($activity['transaction_type']) . " - " . ($activity['category_name'] ?? 'Uncategorized');
+                                                                break;
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                    <div class="activity-time">
+                                                        <?php echo date('M j, g:i A', strtotime($activity['created_at'])); ?>
+                                                    </div>
+                                                </div>
+                                                <div class="activity-detail">
+                                                    <?php
+                                                    switch($activity['type']) {
+                                                        case 'exercise':
+                                                            echo $activity['duration'] . " min • " . $activity['calories_burned'] . " calories";
+                                                            break;
+                                                        case 'journal':
+                                                            echo isset($activity['preview']) ? $activity['preview'] . '...' : 'Personal reflection';
+                                                            break;
+                                                        case 'transaction':
+                                                            echo "$" . number_format($activity['amount'], 2) . " • " . $activity['description'];
+                                                            break;
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                    <div class="no-activity">
+                                        <i class="fas fa-history"></i>
+                                        <p>No recent activities yet.<br>Start tracking to see your progress here!</p>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Setup Reminder (if needed) -->
+                    <?php if($isFirstTimeUser): ?>
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="profile-reminder enhanced-reminder animate-fade-in" id="profileReminder">
+                                <div class="pulse-animation">
+                                    <h6><i class="fas fa-user-circle me-2"></i>Complete Your Profile</h6>
+                                    <p class="mb-3">Set up your personal information to get personalized insights and better tracking experience.</p>
+                                    <div class="d-flex gap-2">
+                                        <a href="profile.php" class="btn btn-light btn-sm">
+                                            <i class="fas fa-arrow-right me-1"></i>Complete Now
+                                        </a>
+                                        <button onclick="dismissReminder()" class="btn btn-outline-light btn-sm">
+                                            <i class="fas fa-times me-1"></i>Later
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
@@ -577,11 +628,8 @@ try {
                 if (reminder) reminder.style.display = 'none';
             }
 
-            // Initialize progress bars and circles
+            // Initialize progress elements
             initializeProgressElements();
-            
-            // Initialize charts
-            initializeCharts();
             
             // Initialize interactive elements
             initializeInteractions();
@@ -615,157 +663,8 @@ try {
             });
         }
 
-        // Initialize charts
-        function initializeCharts() {
-            // Category spending chart
-            <?php if(!empty($topCategories)): ?>
-            const categoryCtx = document.getElementById('categoryChart');
-            if (categoryCtx) {
-                new Chart(categoryCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: <?php echo json_encode(array_column($topCategories, 'category_name')); ?>,
-                        datasets: [{
-                            data: <?php echo json_encode(array_column($topCategories, 'total')); ?>,
-                            backgroundColor: <?php echo json_encode(array_column($topCategories, 'color')); ?>,
-                            borderWidth: 0,
-                            hoverBorderWidth: 4,
-                            hoverBorderColor: '#ffffff'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 20,
-                                    font: {
-                                        size: 12
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.label + ':  + context.parsed.toFixed(2);
-                                    }
-                                }
-                            }
-                        },
-                        cutout: '60%'
-                    }
-                });
-            }
-            <?php endif; ?>
-
-            // Mood trend chart
-            <?php if(!empty($weeklyMoodData)): ?>
-            const moodCtx = document.getElementById('moodTrendChart');
-            if (moodCtx) {
-                // Process mood data for line chart
-                const moodColors = {
-                    'happy': '#10b981',
-                    'excited': '#f59e0b', 
-                    'neutral': '#6b7280',
-                    'sad': '#3b82f6',
-                    'angry': '#ef4444'
-                };
-                
-                const moodData = <?php echo json_encode($weeklyMoodData); ?>;
-                const processedData = {};
-                
-                moodData.forEach(item => {
-                    if (!processedData[item.date]) {
-                        processedData[item.date] = {};
-                    }
-                    processedData[item.date][item.mood] = item.count;
-                });
-
-                new Chart(moodCtx, {
-                    type: 'line',
-                    data: {
-                        labels: Object.keys(processedData).map(date => new Date(date).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})),
-                        datasets: Object.keys(moodColors).map(mood => ({
-                            label: mood.charAt(0).toUpperCase() + mood.slice(1),
-                            data: Object.keys(processedData).map(date => processedData[date][mood] || 0),
-                            borderColor: moodColors[mood],
-                            backgroundColor: moodColors[mood] + '20',
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6
-                        }))
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            <?php endif; ?>
-        }
-
         // Initialize interactive elements
         function initializeInteractions() {
-            // Chart tabs functionality
-            document.querySelectorAll('.chart-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const chartType = this.dataset.chart;
-                    
-                    // Update active tab
-                    document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show corresponding chart
-                    document.querySelectorAll('.chart-wrapper').forEach(wrapper => {
-                        wrapper.classList.remove('active');
-                    });
-                    document.getElementById(chartType + 'Chart').classList.add('active');
-                });
-            });
-
-            // Time filter functionality
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Here you would typically reload data for the selected period
-                    const period = this.dataset.period;
-                    console.log('Filter changed to:', period);
-                });
-            });
-
-            // Floating Action Button
-            const fab = document.getElementById('quickActionsFab');
-            const fabMain = fab.querySelector('.fab-main');
-            
-            fabMain.addEventListener('click', function() {
-                fab.classList.toggle('active');
-            });
-
-            // Close FAB when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!fab.contains(e.target)) {
-                    fab.classList.remove('active');
-                }
-            });
-
             // Module card hover effects
             document.querySelectorAll('.enhanced-module').forEach(card => {
                 card.addEventListener('mouseenter', function() {
