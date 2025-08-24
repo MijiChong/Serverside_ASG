@@ -219,7 +219,7 @@ $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <select class="form-control" name="exercise_type" id="exercise_type">
                                     <option value="">All</option>
                                     <option value="Jogging">Jogging</option>
-                                    <option value="Gym">Gym Workout</option>
+                                    <option value="Gym Workout">Gym Workout</option>
                                     <option value="Cycling">Cycling</option>
                                     <option value="Swimming">Swimming</option>
                                     <option value="Yoga">Yoga</option>

@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <!-- Weight -->
                             <div class="form-group" style="grid-column: 1 / span 1;">
                                 <label for="weight">Your Weight (kg)</label>
-                                <input type="number" id="weight" name="user_weight" min="30" max="300" step="0.01" placeholder="e.g., 65" onchange="updateCaloriesField()">
+                                <input type="number" id="weight" name="user_weight" min="30" max="300" step="0.01" placeholder="e.g., 65" onchange="updateCaloriesField()" required>
                                 <!-- <small style="color: #666; font-size: 0.8rem; margin-top: 5px; display: block;">
                                     Used for calorie calculation. You can change this anytime.
                                 </small> -->
