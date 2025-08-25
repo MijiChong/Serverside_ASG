@@ -68,8 +68,10 @@ function calculateCalories(exerciseType, duration, weight) {
         met = metValues[exerciseType] || 5.0;
     }
 
-    const hours = duration / 60;
-    const calories = met * weight * hours;
+    // const hours = duration / 60;
+    // const calories = met * weight * hours;
+    const caloriesPerMinute = (met*3.5*weight)/200;
+    const calories = caloriesPerMinute * duration;
 
 
     return parseFloat(calories.toFixed(2));
