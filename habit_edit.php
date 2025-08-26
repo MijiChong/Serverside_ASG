@@ -37,45 +37,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Edit Habit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-<<<<<<< HEAD
-    <link href="css/habit_1.css" rel="stylesheet"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="css/global-setting.css" rel="stylesheet">
-    <!-- Navigation CSS -->
     <link href="navigation/navbar.css" rel="stylesheet">
-=======
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="css/habit_1.css" rel="stylesheet"> 
-   <link href="navigation/navbar.css" rel="stylesheet"> 
-    <link href="css/global-setting.css" rel="stylesheet">
->>>>>>> michi
-    
+    <link href="css/habit_1.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #4f46e5;
             --secondary-color: #06b6d4;
             --accent-color: #f59e0b;
             --success-color: #10b981;
-            /* Apply user's selected gradient */
             <?php echo getGradientCSS(); ?>
         }
     </style>
-<<<<<<< HEAD
 </head>
 <body <?php echo getBodyClass(); ?>>
-=======
-
-<body <?php echo getBodyClass(); ?>>
-</head>
-<body>
->>>>>>> michi
 <?php include 'navigation/navbar.php'; ?>
 
 <div class="container mt-5 animate-fade-in"> 
